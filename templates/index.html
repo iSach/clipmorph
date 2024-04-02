@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLIP MORPH</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/index.css') }}" />
+</head>
+<body>
+    <h1> CLIP MORPH</h1>
+    <h1>Choose a style and upload your video</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        
+        <label for="file">Choose a style</label>
+        <select name="style-select" id="style-select">
+            <option value="">--Please choose an option--</option>
+            {% for style in style_options %}
+            <option value="{{ style }}">{{ style }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="file">Choose a video .mp4</label>
+        <input type="file" name="file" accept=".mp4">
+
+        <button type="submit">Upload and Stylize</button>
+
+    </form>
+</body>
+</html>
