@@ -486,18 +486,17 @@ def frames_to_video(input_loc, output_loc, fps):
 def style(path_to_original, style_model):
     import os 
     model_dir = "./models/"+style_model+".pth"   
-    if not os.path.exists("frames_video/"):  # Path to the model you use to stylize your file
-        content_dir = os.makedirs("frames_video/"  ) 
-    else:
-        content_dir = "frames_video/"    # Path to which the original video frames will be extract. (If image, does not matter)
-    if not os.path.exists("output/"):
-        output_dir = "output/" 
-    else:
-        output_dir = "output/" # Path to which the stylized video frames will be put
-    if not os.path.exists("result/"):
-        stylized_dir = "result/"      # Path to the final stylized file
-    else:
-        stylized_dir = "result/"
+    if not os.path.exists("frames_video"):  # Path to the model you use to stylize your file
+        os.makedirs("frames_video")
+    content_dir = "frames_video"    # Path to which the original video frames will be extract. (If image, does not matter)
+    if not os.path.exists("output"):
+        os.makedirs("output")
+    output_dir = "output" # Path to which the stylized video frames will be put
+    if not os.path.exists("result"):
+        os.makedirs("result")
+    stylized_dir = "result"      # Path to the final stylized file
+
+    print('--------------------- Stylizing the file: ', output_dir)
 
     # First delete all files in the content_dir
     import os 

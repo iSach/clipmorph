@@ -6,20 +6,25 @@ FROM python:3.12
 COPY requirements.txt .
 COPY styles.txt .
 COPY clipmorph.py .
-copy app.py .
-COPY templates .
-COPY static .
-COPY models .
+COPY app.py .
+COPY templates ./templates
+COPY static ./static
+COPY models ./models
 
 
 # Make port 8080 available to the world outside this container.
 EXPOSE 8080
 
+# Solve cv2 error
+RUN apt-get update
+RUN apt-get install -y libsm6 libxext6 libxrender-dev
+RUN pip install opencv-python-headless
+
 # Download and install depedencies (libraries)
 RUN pip install -r requirements.txt
 
 # Define environment variable
-ENV FLASK_APP=hello_world.py
+ENV FLASK_APP=app.py
 
 # Run app.py when the container launches
 CMD ["flask", "run", "--host=0.0.0.0", "--port=8080"]
