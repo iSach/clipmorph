@@ -2,15 +2,9 @@
 # simple application. 
 FROM python:3.12
 
-# Copy our files over to the Docker container.
-COPY requirements.txt .
-COPY styles.txt .
-COPY clipmorph.py .
-COPY app.py .
-COPY templates ./templates
-COPY static ./static
-COPY models ./models
+WORKDIR /workspace
 
+COPY . .
 
 # Make port 8080 available to the world outside this container.
 EXPOSE 8080
