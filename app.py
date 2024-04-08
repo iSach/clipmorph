@@ -1,7 +1,9 @@
 from flask import Flask, url_for, redirect, render_template, request, send_file
-from moviepy.editor import VideoFileClip
+from flask_socketio import SocketIO, emit
 import os
 from werkzeug.exceptions import BadRequestKeyError
+import clipmorph
+import threading 
 
 app = Flask(__name__)
 
@@ -11,15 +13,13 @@ if not os.path.exists(UPLOAD_FOLDER):
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.static_folder = 'static'
+socketio = SocketIO(app)
 
-def inverse_color_video(input_file, output_file, style):
+def inverse_color_video(input_file, style):
     """Invert the colors of a video."""
-    print('Inverting colors of video; style: ', style)
-    clip = VideoFileClip(input_file)
-    inverted_clip = clip.fl_image(lambda image: 255 - image)
-    inverted_clip.write_videofile(output_file)
-    clip.close()
-    inverted_clip.close()
+    print('Applying the style: ', style)
+    output_file = clipmorph.style(input_file, style)
+    return output_file
 
 def get_style_options():
     with open('styles.txt', 'r') as file:
@@ -27,8 +27,8 @@ def get_style_options():
 
 @app.route('/')
 def index():
-    return render_template('index.html', style_options=get_style_options())
-
+    return render_template('index_test.html', style_options=get_style_options())
+ 
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if request.method == 'POST':
@@ -44,11 +44,10 @@ def upload_file():
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(file_path)
 
-            # Generate path for modified video
-            modified_file_path = os.path.join(app.config['UPLOAD_FOLDER'], 'modified_' + file.filename)
+
 
             # Invert colors and save modified video
-            inverse_color_video(file_path, modified_file_path, style)
+            modified_file_path = inverse_color_video(file_path, style)
 
             # Provide a downloadable link for the modified video file
             return send_file(

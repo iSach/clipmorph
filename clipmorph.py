@@ -1,10 +1,3 @@
-# %% [markdown]
-# # ClipMorph: neural style transfer for videos with consistency 
-# 
-# This notebook contains early code for training a ClipMorph model. 
-# Authors: Lewin Sacha, Louette Arthur, Schyns Axelle, and Boveroux Laurie.
-
-# %%
 import torch
 import torch.nn as nn
 import torch.utils.data as data
@@ -18,13 +11,12 @@ from PIL import Image
 import random
 import numpy as np
 import os
+import cv2
+import time
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# %% [markdown]
-# ## VGG19 and Fast Style Net models
 
-# %%
 '''
 VGG19 serves as a pretrained model to extract high-level representations of images.
 
@@ -62,13 +54,14 @@ class Vgg19(nn.Module):
         y = self.block4(y)
         vgg_outputs.append(y)
         return vgg_outputs
+    
 
-# %%
-"""
+    """
 Outputs a stylized image from a given image.
 
 One model is trained per image.
 """
+
 class FastStyleNet(nn.Module):
     def __init__(self):
         super(FastStyleNet, self).__init__()
@@ -147,10 +140,6 @@ class ConvTrans(nn.Module):
     def forward(self, x):
         return self.convTrans(x)
 
-# %% [markdown]
-# ## Dataset class and data loader functions
-
-# %%
 class Data(data.Dataset):
     def __init__(self, root_dir, img_size):
         super().__init__()
@@ -198,10 +187,6 @@ def load_image(filename, size=None):
         img = img.resize((size, size))
     return img
 
-# %% [markdown]
-# ### Normalize style image due to VGG19 image net
-
-# %%
 def norm_batch_vgg(batch):
     #Normalization due to how VGG19 networks were trained
     mean = batch.new_tensor([0.485, 0.456, 0.406]).view(-1, 1, 1)
@@ -209,10 +194,6 @@ def norm_batch_vgg(batch):
     batch = batch.div_(255.0) # because previously multiplied by 255.
     return (batch - mean) / std
 
-# %% [markdown]
-# ### Style Loss along with Gram matrix and Total Variation Loss
-
-# %%
 def gram_matrix(y):
     """
     Computes the Gram matrix
@@ -254,10 +235,6 @@ def tot_variation_loss(img):
         + torch.sum(torch.abs(img[:, :, :-1, :] - img[:, :, 1:, :])))
     return loss
 
-# %% [markdown]
-# ## Train the Fast Style Net (VGG19 is fixed)
-
-# %%
 def train(train_img_dir, img_train_size, style_img_name, batch_size, nb_epochs, 
     content_weight, style_weight, tv_weight, temporal_weight, noise_count, noise, name_model):
     """
@@ -366,57 +343,46 @@ def train(train_img_dir, img_train_size, style_img_name, batch_size, nb_epochs,
 
     return tot_loss, content_loss, styl_loss, temp_loss, tv_loss
 
-# %% [markdown]
-# ## Main for training
-# One model must be trained per style image. 
-# To train, you need:
-# - a dataset folder of photograph images, put the path to it in the 'train_img_dir' below.
-# - a 'style' folder where you put your styles images. Then you enter the style image name in 'style_img_name' below.
-# - a 'models' folder where your trained model will be saved as "style_img_name.pth".
 
-# %%
-# Visual Genome dataset link : https://cs.stanford.edu/people/rak248/VG_100K_2/images.zip
-train_img_dir = "./VG_100K"
-style_img_name = "vangogh.jpg"
-img_train_size = 512    
-batch_size = 2
-nb_epochs = 1
-content_weight = 1e5    # Content loss weighting factor
-style_weight = 4e10     # Style loss weighting factor
-tv_weight = 1e-6        # Total variation loss weighting factor
-temporal_weight = 1300  # Temporal loss weighting factor
-noise_count = 1000      # number of pixels to modify with noise
-noise = 30              # range of noise to add
-name_model = os.path.splitext(style_img_name)[0] # name of the model that will be saved after training
-tot_loss, content_loss, styl_loss, temp_loss, tv_loss = train(
-    train_img_dir, img_train_size, style_img_name, batch_size, nb_epochs, 
-    content_weight, style_weight, tv_weight, temporal_weight, noise_count, noise, name_model)
+def plot_loss():
+    # Visual Genome dataset link : https://cs.stanford.edu/people/rak248/VG_100K_2/images.zip
+    train_img_dir = "./VG_100K"
+    style_img_name = "vangogh.jpg"
+    img_train_size = 512    
+    batch_size = 2
+    nb_epochs = 1
+    content_weight = 1e5    # Content loss weighting factor
+    style_weight = 4e10     # Style loss weighting factor
+    tv_weight = 1e-6        # Total variation loss weighting factor
+    temporal_weight = 1300  # Temporal loss weighting factor
+    noise_count = 1000      # number of pixels to modify with noise
+    noise = 30              # range of noise to add
+    name_model = os.path.splitext(style_img_name)[0] # name of the model that will be saved after training
+    tot_loss, content_loss, styl_loss, temp_loss, tv_loss = train(
+        train_img_dir, img_train_size, style_img_name, batch_size, nb_epochs, 
+        content_weight, style_weight, tv_weight, temporal_weight, noise_count, noise, name_model)
 
-# Plot losses
-if True:
-    import matplotlib.pyplot as plt
-    plt.figure()
-    plt.plot(tot_loss, label='Total loss'); plt.legend()
-    plt.figure()
-    plt.plot(content_loss, label='Content loss'); plt.legend()
-    plt.figure()
-    plt.plot(styl_loss, label='Style loss');  plt.legend()
-    plt.figure()
-    plt.plot(temp_loss, label='Temporal loss'); plt.legend()
-    plt.figure()
-    plt.plot(tv_loss, label='TV loss'); plt.legend()
-    plt.figure()
-    plt.figure(figsize=(9,6))
-    plt.plot(tot_loss, label='Total loss'); plt.plot(content_loss, label='Content loss')
-    plt.plot(styl_loss, label='Style loss'); plt.plot(temp_loss, label='Temporal loss')
-    plt.plot(tv_loss, label='TV loss')
-    plt.legend()
-    plt.show()
+    # Plot losses
+    if True:
+        import matplotlib.pyplot as plt
+        plt.figure()
+        plt.plot(tot_loss, label='Total loss'); plt.legend()
+        plt.figure()
+        plt.plot(content_loss, label='Content loss'); plt.legend()
+        plt.figure()
+        plt.plot(styl_loss, label='Style loss');  plt.legend()
+        plt.figure()
+        plt.plot(temp_loss, label='Temporal loss'); plt.legend()
+        plt.figure()
+        plt.plot(tv_loss, label='TV loss'); plt.legend()
+        plt.figure()
+        plt.figure(figsize=(9,6))
+        plt.plot(tot_loss, label='Total loss'); plt.plot(content_loss, label='Content loss')
+        plt.plot(styl_loss, label='Style loss'); plt.plot(temp_loss, label='Temporal loss')
+        plt.plot(tv_loss, label='TV loss')
+        plt.legend()
+        plt.show()
 
-# %% [markdown]
-# # Stylization with trained Fast Style Net
-
-# %%
 def neural_style_transfer(model_path, content_dir, output_dir):
     """
     Apply a model to all images in a directory and save the result in another directory.
@@ -454,14 +420,7 @@ def neural_style_transfer(model_path, content_dir, output_dir):
         stylized = Image.fromarray(stylized)
         stylized.save(output_dir + str(i) + ".jpg")
 
-# %% [markdown]
-# ### Utils for stylization
 
-# %%
-import cv2
-import time
-import os
-import numpy as np
 
 def video_to_frames(input_loc, output_loc):
     """
@@ -524,79 +483,74 @@ def frames_to_video(input_loc, output_loc, fps):
         out.write(img_array[i])
     out.release()
 
-# %% [markdown]
-# ## Main for stylization :
-# Once you have a model trained on a style image, you can stylize any content image in near real-time.  
-# To stylize an image or GIF or video, you need : 
-# - an image (jpg) or a GIF or a video (mp4)
-# - a 'models' folder containing the trained model for a style image
-# - a 'frames_video" folder (can be empty or not)
-# - a 'frames_video_stylized' foler (can be empty or not)
+def style(path_to_original, style_model):
+    #path_to_original = "./content/test.mp4"  # Path to the file you want stylize. Can have extensions '.jpg', '.gif', '.mp4'
+    #model_dir = "./models/gericault.pth"   # Path to the model you use to stylize your file
+    model_dir = "./models/"+style_model+".pth"   # Path to the model you use to stylize your file
+    content_dir = "./frames_video/"         # Path to which the original video frames will be extract. (If image, does not matter)
+    output_dir = "./output/" # Path to which the stylized video frames will be put
+    stylized_dir = "./result/"      # Path to the final stylized file
 
-# %%
-path_to_original = "./content/car.gif"  # Path to the file you want stylize. Can have extensions '.jpg', '.gif', '.mp4'
-model_dir = "./models/vangogh.pth"   # Path to the model you use to stylize your file
-content_dir = "./frames_video/"         # Path to which the original video frames will be extract. (If image, does not matter)
-output_dir = "./frames_video_stylized/" # Path to which the stylized video frames will be put
-stylized_dir = "./result/"      # Path to the final stylized file
+    # First delete all files in the content_dir
+    import os 
+    for f in os.listdir(content_dir):
+        os.remove(content_dir+f)
 
-# First delete all files in the content_dir
-import os 
-for f in os.listdir(content_dir):
-    os.remove(content_dir+f)
+    # Extract frames if gif or video
+    name, ext = os.path.splitext(os.path.basename(path_to_original))
 
-# Extract frames if gif or video
-name, ext = os.path.splitext(os.path.basename(path_to_original))
-
-if ext == '.jpg':
-    style_model = FastStyleNet()
-    style_model.load_state_dict(torch.load(model_dir))
-    style_model.to(device)
-    img_path = path_to_original
-    content_image = load_image(img_path)
-    content_trans = T.Compose([
-        T.ToTensor(),
-        T.Lambda(lambda x: x.mul(255))
-    ])
-    content_img = content_trans(content_image)
-    if content_img.size()[0] != 3:
-        content_img = content_img.expand(3, -1, -1)
-    content_img = content_img.unsqueeze(0).to(device)
-    with torch.no_grad():
-        stylized = style_model(content_img).cpu()
-    stylized = stylized[0]
-    stylized = stylized.clone().clamp(0, 255).numpy()
-    stylized = stylized.transpose(1, 2, 0).astype("uint8")
-    stylized = Image.fromarray(stylized)
-    stylized.save(stylized_dir + path_to_original.split('/')[-1])
-    print('Image stylized.')
-else:
-    if ext == '.gif':
+    if ext == '.jpg':
+        style_model = FastStyleNet()
+        style_model.load_state_dict(torch.load(model_dir))
+        style_model.to(device)
+        img_path = path_to_original
+        content_image = load_image(img_path)
+        content_trans = T.Compose([
+            T.ToTensor(),
+            T.Lambda(lambda x: x.mul(255))
+        ])
+        content_img = content_trans(content_image)
+        if content_img.size()[0] != 3:
+            content_img = content_img.expand(3, -1, -1)
+        content_img = content_img.unsqueeze(0).to(device)
+        with torch.no_grad():
+            stylized = style_model(content_img).cpu()
+        stylized = stylized[0]
+        stylized = stylized.clone().clamp(0, 255).numpy()
+        stylized = stylized.transpose(1, 2, 0).astype("uint8")
         from PIL import Image
-        imageObject = Image.open(path_to_original)
-        for frame in range(0,imageObject.n_frames):
-            imageObject.seek(frame)
-            imageObject.convert('RGB').save(content_dir+str(frame)+".jpg")
-    elif ext == '.mp4':
-        fps = video_to_frames(path_to_original, content_dir)
+        stylized = Image.fromarray(stylized)
+        stylized.save(stylized_dir + path_to_original.split('/')[-1])
+        print('Image stylized.')
+    else:
+        if ext == '.gif':
+            from PIL import Image
+            imageObject = Image.open(path_to_original)
+            for frame in range(0,imageObject.n_frames):
+                imageObject.seek(frame)
+                imageObject.convert('RGB').save(content_dir+str(frame)+".jpg")
+        elif ext == '.mp4':
+            fps = video_to_frames(path_to_original, content_dir)
 
-    # Delete all files in the output_dir and apply stylization
-    for f in os.listdir(output_dir):
-        os.remove(output_dir+f)
-    neural_style_transfer(model_dir, content_dir, output_dir)
+        # Delete all files in the output_dir and apply stylization
+        for f in os.listdir(output_dir):
+            os.remove(output_dir+f)
+        neural_style_transfer(model_dir, content_dir, output_dir)
 
-    # Reconstruct gif or video and put the new stylized file in 'stylized_dir'
-    if ext == '.gif':
-        frames = os.listdir(output_dir)
-        GIF_list=[]
-        for i in range(len(frames)):
-            new_frame = Image.open(output_dir+str(i)+".jpg")
-            GIF_list.append(new_frame)
-        # Save into a GIF 
-        GIF_list[0].save(stylized_dir+name+'.gif', format='GIF',
-                    append_images=GIF_list[1:],
-                    save_all=True,)
-    elif ext == '.mp4':
-        frames_to_video(output_dir, stylized_dir+name+'.mp4', fps)
+        # Reconstruct gif or video and put the new stylized file in 'stylized_dir'
+        if ext == '.gif':
+            frames = os.listdir(output_dir)
+            GIF_list=[]
+            for i in range(len(frames)):
+                new_frame = Image.open(output_dir+str(i)+".jpg")
+                GIF_list.append(new_frame)
+            # Save into a GIF 
+            GIF_list[0].save(stylized_dir+name+'.gif', format='GIF',
+                        append_images=GIF_list[1:],
+                        save_all=True,)
+        elif ext == '.mp4':
+            frames_to_video(output_dir, stylized_dir+name+'.mp4', fps)
+    return os.path.join(stylized_dir, name+'.mp4' )
 
-
+if __name__ == '__main__':
+    style()
