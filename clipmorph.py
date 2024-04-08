@@ -484,12 +484,20 @@ def frames_to_video(input_loc, output_loc, fps):
     out.release()
 
 def style(path_to_original, style_model):
-    #path_to_original = "./content/test.mp4"  # Path to the file you want stylize. Can have extensions '.jpg', '.gif', '.mp4'
-    #model_dir = "./models/gericault.pth"   # Path to the model you use to stylize your file
-    model_dir = "./models/"+style_model+".pth"   # Path to the model you use to stylize your file
-    content_dir = "./frames_video/"         # Path to which the original video frames will be extract. (If image, does not matter)
-    output_dir = "./output/" # Path to which the stylized video frames will be put
-    stylized_dir = "./result/"      # Path to the final stylized file
+    import os 
+    model_dir = "./models/"+style_model+".pth"   
+    if not os.path.exists("frames_video/"):  # Path to the model you use to stylize your file
+        content_dir = os.makedirs("frames_video/"  ) 
+    else:
+        content_dir = "frames_video/"    # Path to which the original video frames will be extract. (If image, does not matter)
+    if not os.path.exists("output/"):
+        output_dir = "output/" 
+    else:
+        output_dir = "output/" # Path to which the stylized video frames will be put
+    if not os.path.exists("result/"):
+        stylized_dir = "result/"      # Path to the final stylized file
+    else:
+        stylized_dir = "result/"
 
     # First delete all files in the content_dir
     import os 
@@ -550,6 +558,11 @@ def style(path_to_original, style_model):
                         save_all=True,)
         elif ext == '.mp4':
             frames_to_video(output_dir, stylized_dir+name+'.mp4', fps)
+    # delete folder and its content 
+    import shutil
+    shutil.rmtree(content_dir)
+    shutil.rmtree(output_dir)
+    
     return os.path.join(stylized_dir, name+'.mp4' )
 
 if __name__ == '__main__':

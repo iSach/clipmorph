@@ -1,5 +1,4 @@
 from flask import Flask, url_for, redirect, render_template, request, send_file
-from flask_socketio import SocketIO, emit
 import os
 from werkzeug.exceptions import BadRequestKeyError
 import clipmorph
@@ -13,7 +12,6 @@ if not os.path.exists(UPLOAD_FOLDER):
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.static_folder = 'static'
-socketio = SocketIO(app)
 
 def inverse_color_video(input_file, style):
     """Invert the colors of a video."""
@@ -27,7 +25,7 @@ def get_style_options():
 
 @app.route('/')
 def index():
-    return render_template('index_test.html', style_options=get_style_options())
+    return render_template('index.html', style_options=get_style_options())
  
 @app.route('/upload', methods=['POST'])
 def upload_file():
