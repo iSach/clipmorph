@@ -149,8 +149,7 @@ def train(
 
 
 def plot_loss():
-    # Visual Genome dataset link : https://cs.stanford.edu/people/rak248/VG_100K_2/images.zip
-    train_img_dir = "training_data/images/"
+    train_img_dir = "training_data/visual_genome/"
     style_img_name = "training_data/styles/starrynight.jpg"
     img_train_size = 512
     batch_size = 2
@@ -195,3 +194,7 @@ def plot_loss():
         plt.plot(tv_loss, label='TV loss')
         plt.legend()
         plt.show()
+
+
+if __name__ == '__main__':
+    plot_loss()
