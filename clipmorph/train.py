@@ -137,9 +137,13 @@ def train(
             }
 
             if step % 50 == 0:
-                log_dict["image"] = wandb.Image(
-                    y[0].permute(1, 2, 0).detach().cpu().numpy()
-                )
+                np_img = y[0].permute(1, 2, 0).detach().cpu().numpy()
+                in_np_img = x[0].permute(1, 2, 0).detach().cpu().numpy()
+                np_img = np.concatenate((in_np_img, np_img), axis=1)
+
+                print(np_img.shape)
+
+                log_dict["image"] = wandb.Image(np_img)
 
             if use_wandb:
                 wandb.log(log_dict)
