@@ -3,6 +3,7 @@ pillow
 numpy
 matplotlib
 wandb
+pytest
 
 # TODO Fix --extra-index-url https://download.pytorch.org/whl/cu118
 torch

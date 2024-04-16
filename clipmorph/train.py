@@ -161,7 +161,7 @@ def plot_loss():
     train_img_dir = "training_data/visual_genome/"
     style_img_name = "training_data/styles/starrynight.jpg"
     img_train_size = 512
-    batch_size = 2
+    batch_size = 16
     nb_epochs = 1
     content_weight = 1e5  # Content loss weighting factor
     style_weight = 4e10  # Style loss weighting factor
