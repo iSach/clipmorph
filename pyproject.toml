@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clipmorph"
+requires-python = ">= 3.9"
+description = "ClipMorph: Turn your clips into art"
+authors = [
+  {name = "Laurie Boveroux", email = "laurie.boveroux@uliege.be"},
+  {name = "Sacha Lewin", email = "sacha.lewin@uliege.be"},
+  {name = "Arthur Louette", email = "arthur.louette@uliege.be"},
+  {name = "Axelle Schyns", email = "axelle.schyns@uliege.be"},
+]
+classifiers = [
+  "Intended Audience :: Customer Service",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+]
+license = {file = "LICENSE"}
+readme = "README.md"
+dynamic = ["dependencies", "version"]
+
+[project.urls]
+documentation = "https://github.com/iSach/clipmorph"
+
+[tool.setuptools.dynamic]
+dependencies = {file = "requirements.txt"}
+version = {attr = "clipmorph.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["clipmorph"]

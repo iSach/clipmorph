@@ -1,7 +1,7 @@
 from flask import Flask, url_for, redirect, render_template, request, send_file
 import os
 from werkzeug.exceptions import BadRequestKeyError
-import clipmorph
+from clipmorph import clipmorph
 import threading 
 
 app = Flask(__name__)

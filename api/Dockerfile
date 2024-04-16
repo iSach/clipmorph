@@ -4,7 +4,7 @@ FROM python:3.12
 
 WORKDIR /workspace
 
-COPY . .
+COPY .. .
 
 # Make port 8080 available to the world outside this container.
 EXPOSE 8080
@@ -18,7 +18,7 @@ RUN pip install opencv-python-headless
 RUN pip install -r requirements.txt
 
 # Define environment variable
-ENV FLASK_APP=app.py
+ENV FLASK_APP=api.py
 
-# Run app.py when the container launches
+# Run api.py when the container launches
 CMD ["flask", "run", "--host=0.0.0.0", "--port=8080"]
