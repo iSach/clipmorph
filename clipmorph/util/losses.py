@@ -1,3 +1,8 @@
+import torch
+
+from clipmorph.util import gram_matrix
+
+
 def style_loss(gram_style_img, curr_img_features, criterion, n_batch):
     """
     Sum MSE's from the chosen output layers of VGG

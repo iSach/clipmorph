@@ -1,3 +1,13 @@
+import os
+
+import torch
+from PIL import Image
+from torchvision import transforms as T
+from tqdm import tqdm
+
+from clipmorph.data import load_image
+from clipmorph.nn import FastStyleNet
+
 
 def neural_style_transfer(model_path, content_dir, output_dir):
     """
@@ -11,6 +21,7 @@ def neural_style_transfer(model_path, content_dir, output_dir):
 
     style_model = FastStyleNet()
     style_model.load_state_dict(torch.load(model_path))
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     style_model.to(device)
 
     img_list = os.listdir(content_dir)
