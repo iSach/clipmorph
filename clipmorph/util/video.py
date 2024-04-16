@@ -1,3 +1,13 @@
+import os
+import time
+
+import cv2
+import torch
+from torchvision import transforms as T
+
+from clipmorph.data import load_image
+from clipmorph.nn import FastStyleNet
+
 
 def video_to_frames(input_loc, output_loc):
     """
@@ -33,7 +43,7 @@ def video_to_frames(input_loc, output_loc):
         cv2.imwrite(output_loc + str(count) + ".jpg", frame)
         count = count + 1
         # If there are no more frames left
-        if (count > (video_lengt h -1)):
+        if (count > (video_length -1)):
             # Log the time again
             time_end = time.time()
             # Release the feed
@@ -64,6 +74,7 @@ def frames_to_video(input_loc, output_loc, fps):
     out.release()
 
 
+# TODO move -> run.py
 def style(path_to_original, style_model):
     import os
     model_dir = "./models/" + style_model + ".pth"
@@ -91,6 +102,7 @@ def style(path_to_original, style_model):
     if ext == '.jpg':
         style_model = FastStyleNet()
         style_model.load_state_dict(torch.load(model_dir))
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         style_model.to(device)
         img_path = path_to_original
         content_image = load_image(img_path)
@@ -125,7 +137,7 @@ def style(path_to_original, style_model):
         # Delete all files in the output_dir and apply stylization
         for f in os.listdir(output_dir):
             os.remove(output_dir + f)
-        neural_style_transfer(model_dir, content_dir, output_dir)
+        # TODO neural_style_transfer(model_dir, content_dir, output_dir)
 
         # Reconstruct gif or video and put the new stylized file in 'stylized_dir'
         if ext == '.gif':
