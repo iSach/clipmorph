@@ -1,6 +1,7 @@
 import random
 import os
 
+import wandb
 from torch import nn
 from torch.optim import Adam
 from torchvision import transforms as T
@@ -125,6 +126,14 @@ def train(
             temp_loss.append(L_temporal.item())
             tv_loss.append(L_tv.item())
 
+            wandb.log({
+                "total_loss": L_total.item(),
+                "content_loss": L_content.item(),
+                "style_loss": L_style.item(),
+                "temporal_loss": L_temporal.item(),
+                "tv_loss": L_tv.item()
+            })
+
             # if False:
             #    print('Epoch {}, L_total: {}, L_content {}, L_style {}, L_tot_var {}, L_temporal {}'
             #                    .format(e, L_total.data, L_content.data, L_style.data, L_tv.data, L_temporal.data))
@@ -162,6 +171,25 @@ def plot_loss():
     noise = 30  # range of noise to add
     name_model = os.path.splitext(style_img_name)[0]  # name of the model
     # that will be saved after training
+
+    wandb.init(
+        project="clipmorph",
+        name="debug",
+        config={
+            "train_img_dir": train_img_dir,
+            "style_img_name": style_img_name,
+            "img_train_size": img_train_size,
+            "batch_size": batch_size,
+            "nb_epochs": nb_epochs,
+            "content_weight": content_weight,
+            "style_weight": style_weight,
+            "tv_weight": tv_weight,
+            "temporal_weight": temporal_weight,
+            "noise_count": noise_count,
+            "noise": noise,
+            "name_model": name_model
+        }
+    )
 
     tot_loss, content_loss, styl_loss, temp_loss, tv_loss = train(
         train_img_dir, img_train_size, style_img_name, batch_size, nb_epochs,

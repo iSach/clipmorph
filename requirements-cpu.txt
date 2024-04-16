@@ -2,6 +2,7 @@ tqdm
 pillow
 numpy
 matplotlib
+wandb
 
 # TODO Fix --extra-index-url https://download.pytorch.org/whl/cpu
 torch
