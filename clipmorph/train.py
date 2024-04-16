@@ -31,6 +31,7 @@ def train(
         noise_count,
         noise,
         name_model,
+        use_wandb=True,
         device='cuda'
 ):
     """
@@ -83,6 +84,7 @@ def train(
     for e in range(nb_epochs):
         fsn.train()
         count = 0
+        step = 0
 
         noise_img_a = np.zeros((3, img_train_size, img_train_size),
                                dtype=np.float32)
@@ -126,13 +128,21 @@ def train(
             temp_loss.append(L_temporal.item())
             tv_loss.append(L_tv.item())
 
-            wandb.log({
-                "total_loss": L_total.item(),
-                "content_loss": L_content.item(),
-                "style_loss": L_style.item(),
-                "temporal_loss": L_temporal.item(),
-                "tv_loss": L_tv.item()
-            })
+            log_dict = {
+                    "total_loss": L_total.item(),
+                    "content_loss": L_content.item(),
+                    "style_loss": L_style.item(),
+                    "temporal_loss": L_temporal.item(),
+                    "tv_loss": L_tv.item()
+            }
+
+            if step % 50 == 0:
+                log_dict["image"] = wandb.Image(
+                    y[0].permute(1, 2, 0).detach().cpu().numpy()
+                )
+
+            if use_wandb:
+                wandb.log(log_dict)
 
             # if False:
             #    print('Epoch {}, L_total: {}, L_content {}, L_style {}, L_tot_var {}, L_temporal {}'
@@ -141,6 +151,8 @@ def train(
             L_total.backward()
             optimizer.step()
             x.to('cpu')
+            step = step + 1
+
         noise_img.to('cpu')  # release GPU memory
 
     # Save model
@@ -157,7 +169,7 @@ def train(
     return tot_loss, content_loss, styl_loss, temp_loss, tv_loss
 
 
-def plot_loss():
+def plot_loss(use_wandb=True):
     train_img_dir = "training_data/visual_genome/"
     style_img_name = "training_data/styles/starrynight.jpg"
     img_train_size = 512
@@ -172,57 +184,45 @@ def plot_loss():
     name_model = os.path.splitext(style_img_name)[0]  # name of the model
     # that will be saved after training
 
-    wandb.init(
-        project="clipmorph",
-        name="debug",
-        config={
-            "train_img_dir": train_img_dir,
-            "style_img_name": style_img_name,
-            "img_train_size": img_train_size,
-            "batch_size": batch_size,
-            "nb_epochs": nb_epochs,
-            "content_weight": content_weight,
-            "style_weight": style_weight,
-            "tv_weight": tv_weight,
-            "temporal_weight": temporal_weight,
-            "noise_count": noise_count,
-            "noise": noise,
-            "name_model": name_model
-        }
+    if use_wandb:
+        wandb.init(
+            project="clipmorph",
+            name="debug",
+            config={
+                "train_img_dir": train_img_dir,
+                "style_img_name": style_img_name,
+                "img_train_size": img_train_size,
+                "batch_size": batch_size,
+                "nb_epochs": nb_epochs,
+                "content_weight": content_weight,
+                "style_weight": style_weight,
+                "tv_weight": tv_weight,
+                "temporal_weight": temporal_weight,
+                "noise_count": noise_count,
+                "noise": noise,
+                "name_model": name_model
+            }
+        )
+
+    train(
+        train_img_dir,
+        img_train_size,
+        style_img_name,
+        batch_size,
+        nb_epochs,
+        content_weight,
+        style_weight,
+        tv_weight,
+        temporal_weight,
+        noise_count,
+        noise,
+        name_model
     )
-
-    tot_loss, content_loss, styl_loss, temp_loss, tv_loss = train(
-        train_img_dir, img_train_size, style_img_name, batch_size, nb_epochs,
-        content_weight, style_weight, tv_weight, temporal_weight, noise_count,
-        noise, name_model)
-
-    # Plot losses
-    if False:
-        plt.figure()
-        plt.plot(tot_loss, label='Total loss')
-        plt.legend()
-        plt.figure()
-        plt.plot(content_loss, label='Content loss')
-        plt.legend()
-        plt.figure()
-        plt.plot(styl_loss, label='Style loss')
-        plt.legend()
-        plt.figure()
-        plt.plot(temp_loss, label='Temporal loss')
-        plt.legend()
-        plt.figure()
-        plt.plot(tv_loss, label='TV loss')
-        plt.legend()
-        plt.figure()
-        plt.figure(figsize=(9, 6))
-        plt.plot(tot_loss, label='Total loss')
-        plt.plot(content_loss, label='Content loss')
-        plt.plot(styl_loss, label='Style loss')
-        plt.plot(temp_loss, label='Temporal loss')
-        plt.plot(tv_loss, label='TV loss')
-        plt.legend()
-        plt.show()
 
 
 if __name__ == '__main__':
-    plot_loss()
+
+    # Check for --nowandb argument
+    import sys
+    use_wandb = not "--nowandb" in sys.argv
+    plot_loss(use_wandb)
