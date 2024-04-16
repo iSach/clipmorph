@@ -20,7 +20,7 @@ from clipmorph.util.losses import style_loss, tot_variation_loss
 def train(
         train_img_dir,
         img_train_size,
-        style_img_name,
+        style_img_path,
         batch_size,
         nb_epochs,
         content_weight,
@@ -38,7 +38,7 @@ def train(
     Arguments:
         train_img_dir: Directory where the training images are stored (Genome)
         img_train_size: Size of the training images
-        style_img_name: Name of the style image
+        style_img_path: Name of the style image
         batch_size: Number of images per batch
         nb_epochs: Number of epochs
         content_weight: Weight of the content loss
@@ -65,7 +65,7 @@ def train(
         T.ToTensor(),
         T.Lambda(lambda x: x.mul(255))
     ])
-    style_img = load_image("./style/ " + style_img_name)
+    style_img = load_image(style_img_path)
     style_img = transfo_style(style_img)
     style_img = style_img.repeat(batch_size, 1, 1, 1).to(device)
     style_img = norm_batch_vgg(style_img)
