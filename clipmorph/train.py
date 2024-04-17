@@ -213,9 +213,9 @@ if __name__ == '__main__':
         help='Name of the model'
     )
     parser.add_argument(
-        '--use_wandb', type=bool,
+        '--wandb',
+        action=argparse.BooleanOptionalAction,
         default=True,
-        help='Use Weights & Biases for logging'
     )
 
     args = parser.parse_args()
