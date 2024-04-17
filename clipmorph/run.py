@@ -27,15 +27,23 @@ def neural_style_transfer(model_path, content_dir, output_dir):
     style_model.to(device)
 
     data = load_data(content_dir, 16)
+    num_images = data.dataset.num_images
+
+    progress_bar = tqdm(total=num_images, desc="Stylizing images")
 
     stylized_imgs = []
-    for i, img in tqdm(enumerate(data)):
+    for img, names in data:
+        print(img.shape)
+        print(names)
+        print()
         img = img.to(device)
 
         with torch.no_grad():
             stylized = style_model(img).cpu()
 
         stylized_imgs.append(stylized)
+
+        progress_bar.update(len(names))
 
     stylized_imgs = torch.cat(stylized_imgs, dim=0)
     print(stylized_imgs.shape)

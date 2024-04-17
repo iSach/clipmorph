@@ -40,8 +40,6 @@ class FastStyleNet(nn.Module):
             ConvoLayer(32, 3, kernel_size=9, stride=1, padding=4),
         )
 
-        self.normalization = nn.InstanceNorm2d(3, affine=True)
-
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):

@@ -11,6 +11,7 @@ class Data(data.Dataset):
         self.root_dir = root_dir
         self.img_names = os.listdir(root_dir)
         self.img_size = img_size
+        self.num_images = len(self.img_names)
 
     def __len__(self):
         return len(self.img_names)
@@ -38,7 +39,11 @@ class Data(data.Dataset):
         img = transform(img)
         if img.size()[0] != 3:
             img = img.expand(3, -1, -1)
-        return img
+
+        if self.img_size is None:
+            return img, img_name
+        else:
+            return img  # Training
 
 
 def load_data(root_dir, batch_size, img_size=None):
