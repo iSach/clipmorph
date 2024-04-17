@@ -86,23 +86,13 @@ def train(
         count = 0
         step = 0
 
-        noise_img_a = np.zeros((3, img_train_size, img_train_size),
-                               dtype=np.float32)
-        # TODO in torch + sample.
-        for _ in range(noise_count):
-            x = random.randrange(img_train_size)
-            y = random.randrange(img_train_size)
-            noise_img_a[0][x][y] += random.randrange(-noise, noise)
-            noise_img_a[1][x][y] += random.randrange(-noise, noise)
-            noise_img_a[2][x][y] += random.randrange(-noise, noise)
-        noise_img = torch.from_numpy(noise_img_a)
-        noise_img = noise_img.to(device)
-
         for x in tqdm(data_loader):
             n_batch = len(x)
             count += n_batch
             x = x.to(device)
             optimizer.zero_grad()
+
+            noise_img = torch.randn_like(x) * 0.1
 
             y_noisy = fsn(x + noise_img)
             y_noisy = norm_batch_vgg(y_noisy)
@@ -122,11 +112,6 @@ def train(
             # Small changes in the input should result in small changes in the output.
             L_temporal = temporal_weight * criterion(y, y_noisy)
             L_total = L_content + L_style  # + L_tv + L_temporal
-            tot_loss.append(L_total.item())
-            content_loss.append(L_content.item())
-            styl_loss.append(L_style.item())
-            temp_loss.append(L_temporal.item())
-            tv_loss.append(L_tv.item())
 
             log_dict = {
                     "total_loss": L_total.item(),
@@ -148,29 +133,14 @@ def train(
             if use_wandb:
                 wandb.log(log_dict)
 
-            # if False:
-            #    print('Epoch {}, L_total: {}, L_content {}, L_style {}, L_tot_var {}, L_temporal {}'
-            #                    .format(e, L_total.data, L_content.data, L_style.data, L_tv.data, L_temporal.data))
-
             L_total.backward()
             optimizer.step()
-            x.to('cpu')
             step = step + 1
 
-        noise_img.to('cpu')  # release GPU memory
-
     # Save model
-    fsn.eval().cpu()
     save_model = name_model + ".pth"
     path_model = "./models/" + save_model
     torch.save(fsn.state_dict(), path_model)
-
-    # lease the GPU memory
-    vgg.to('cpu')
-    fsn.to('cpu')
-    style_img.to('cpu')
-
-    return tot_loss, content_loss, styl_loss, temp_loss, tv_loss
 
 
 def plot_loss(use_wandb=True):
@@ -185,8 +155,7 @@ def plot_loss(use_wandb=True):
     temporal_weight = 1300  # Temporal loss weighting factor
     noise_count = 1000  # number of pixels to modify with noise
     noise = 30  # range of noise to add
-    name_model = os.path.splitext(style_img_name)[0]  # name of the model
-    # that will be saved after training
+    name_model = style_img_name.split("/")[-1].split(".")[0]
 
     if use_wandb:
         wandb.init(
