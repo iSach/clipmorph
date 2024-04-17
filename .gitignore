@@ -3,6 +3,8 @@
 venv/*
 
 training_data/images/
+data/
+output/
 
 # Created by https://www.toptal.com/developers/gitignore/api/macos,windows,linux,jetbrains+all,pycharm+all,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,windows,linux,jetbrains+all,pycharm+all,visualstudiocode
