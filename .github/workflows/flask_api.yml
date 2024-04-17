@@ -1,0 +1,16 @@
+# TODO
+
+name: Deploy Flask API to GCR.
+
+on:
+  push: # Branches main & cicd
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
