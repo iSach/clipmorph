@@ -1,16 +1,12 @@
 import argparse
-import random
-import os
 
+import numpy as np
+import torch
 import wandb
 from torch import nn
 from torch.optim import Adam
 from torchvision import transforms as T
 from tqdm import tqdm
-
-import numpy as np
-import torch
-import matplotlib.pyplot as plt
 
 from clipmorph.data import load_data, load_image
 from clipmorph.nn import FastStyleNet, Vgg19
@@ -98,7 +94,7 @@ def train(
             x = x.to(device)
             optimizer.zero_grad()
 
-            #noise_img = torch.randn_like(x) * 0.1
+            # noise_img = torch.randn_like(x) * 0.1
             num_non_zero_pixels = int(0.1 * C * H * W)
             indices = torch.randint(0, C * H * W, (num_non_zero_pixels,))
             x_indices = indices // (W * C)
@@ -106,7 +102,7 @@ def train(
             channel_indices = indices % C
             noise_img = torch.zeros_like(x)
             noise_img[channel_indices, x_indices, y_indices] = torch.randint(
-                -noise, noise+1, (num_non_zero_pixels,)
+                -noise, noise + 1, (num_non_zero_pixels,)
             )
 
             y_noisy = fsn(x + noise_img)
@@ -220,8 +216,26 @@ if __name__ == '__main__':
         default=name_model,
         help='Name of the model'
     )
+    parser.add_argument(
+        '--use_wandb', type=bool,
+        default=True,
+        help='Use Weights & Biases for logging'
+    )
 
     args = parser.parse_args()
+    train_img_dir = args.train_img_dir
+    style_img_name = args.style_img_name
+    img_train_size = args.img_train_size
+    batch_size = args.batch_size
+    nb_epochs = args.nb_epochs
+    content_weight = args.content_weight
+    style_weight = args.style_weight
+    tv_weight = args.tv_weight
+    temporal_weight = args.temporal_weight
+    noise_count = args.noise_count
+    noise = args.noise
+    name_model = args.name_model
+    use_wandb = args.use_wandb
 
     if use_wandb:
         wandb.init(
@@ -258,4 +272,3 @@ if __name__ == '__main__':
         name_model,
         use_wandb=use_wandb
     )
-
