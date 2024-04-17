@@ -105,8 +105,9 @@ def train(
             y = norm_batch_vgg(y)
             x_feat = vgg(x)
             y_feat = vgg(y)
+            # Features at relu1_2, relu2_2, relu3_3, relu4_3
 
-            # We take the output of layer "relu3_3" -> 2nd output of the list
+            # Reconstruction (content): "relu3_3"
             L_content = content_weight * criterion(x_feat[2], y_feat[2])
             L_style = style_weight * style_loss(gram_style, y_feat, criterion,
                                                 n_batch)
