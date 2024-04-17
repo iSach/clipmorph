@@ -19,7 +19,7 @@ def stylize_video(model, video_path, output_path):
 
     # Extract frames from video
     os.system(f'ffmpeg -hide_banner -loglevel error -i {video_path} -q:v 2'
-              f' {temp_folder_name}/frame_%d.jpg')
+              f' {temp_folder_name}/frame_%d.png')
 
     style_model = FastStyleNet()
     style_model.load_state_dict(torch.load(model))
@@ -52,12 +52,13 @@ def stylize_video(model, video_path, output_path):
         stylized = stylized.transpose(1, 2, 0).astype("uint8")
         stylized = Image.fromarray(stylized)
         stylized_path = temp_folder_name + stylized_img_names[i].split("/")[
-            -1].split(".")[0] + "_stylized.jpg"
+            -1].split(".")[0] + "_stylized.png"
         stylized.save(stylized_path)
         print('Saving image to', stylized_path)
 
     # Create video from frames
-    os.system(f'ffmpeg -hide_banner -loglevel error -i {temp_folder_name}/frame_%d_stylized.jpg -q:v 2'
+    os.system(f'ffmpeg -hide_banner -loglevel error -i '
+              f'{temp_folder_name}/frame_%d_stylized.png -q:v 2'
               f' {output_path}')
 
     # Remove temporary folder
