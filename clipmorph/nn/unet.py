@@ -1,6 +1,5 @@
 from torch import nn
 
-from clipmorph.nn.backbone import norm_batch_vgg
 
 
 class FastStyleNet(nn.Module):
