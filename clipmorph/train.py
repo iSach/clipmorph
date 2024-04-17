@@ -1,3 +1,4 @@
+import argparse
 import random
 import os
 
@@ -63,8 +64,8 @@ def train(
     criterion = nn.MSELoss()
     vgg = Vgg19().to(device)
 
-    fsn = fsn.compile()
-    vgg = vgg.compile()
+    fsn.compile()
+    vgg.compile()
 
     transfo_style = T.Compose([
         T.ToTensor(),
@@ -75,7 +76,7 @@ def train(
     style_img = style_img.repeat(batch_size, 1, 1, 1).to(device)
     style_img = norm_batch_vgg(style_img)
 
-    # Get style feature representation
+    # Get style feature represenbtation
     feat_style = vgg(style_img)
     gram_style = [gram_matrix(i) for i in feat_style]
 
@@ -90,12 +91,23 @@ def train(
         step = 0
 
         for x in tqdm(data_loader):
+            C, H, W = x.shape[1:]
+
             n_batch = len(x)
             count += n_batch
             x = x.to(device)
             optimizer.zero_grad()
 
-            noise_img = torch.randn_like(x) * 0.1
+            #noise_img = torch.randn_like(x) * 0.1
+            num_non_zero_pixels = int(0.1 * C * H * W)
+            indices = torch.randint(0, C * H * W, (num_non_zero_pixels,))
+            x_indices = indices // (W * C)
+            y_indices = (indices % (W * C)) // C
+            channel_indices = indices % C
+            noise_img = torch.zeros_like(x)
+            noise_img[channel_indices, x_indices, y_indices] = torch.randint(
+                -noise, noise+1, (num_non_zero_pixels,)
+            )
 
             y_noisy = fsn(x + noise_img)
             y_noisy = norm_batch_vgg(y_noisy)
@@ -125,11 +137,11 @@ def train(
             }
 
             if step % 50 == 0:
+                print(y[0].min(), y[0].max())
+                print(x[0].min(), x[0].max())
                 np_img = y[0].permute(1, 2, 0).detach().cpu().numpy()
                 in_np_img = x[0].permute(1, 2, 0).detach().cpu().numpy()
                 np_img = np.concatenate((in_np_img, np_img), axis=1)
-
-                print(np_img.shape)
 
                 log_dict["image"] = wandb.Image(np_img)
 
@@ -146,19 +158,70 @@ def train(
     torch.save(fsn.state_dict(), path_model)
 
 
-def plot_loss(use_wandb=True):
-    train_img_dir = "training_data/visual_genome/"
-    style_img_name = "training_data/styles/starrynight.jpg"
-    img_train_size = 512
-    batch_size = 8
-    nb_epochs = 1
-    content_weight = 1e5  # Content loss weighting factor
-    style_weight = 4e10  # Style loss weighting factor
-    tv_weight = 1e-6  # Total variation loss weighting factor
-    temporal_weight = 1300  # Temporal loss weighting factor
-    noise_count = 1000  # number of pixels to modify with noise
-    noise = 30  # range of noise to add
-    name_model = style_img_name.split("/")[-1].split(".")[0]
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Train a fast style network')
+    parser.add_argument(
+        '--train_img_dir', type=str,
+        default="training_data/visual_genome/",
+        help='Directory where the training images are stored (e.g., VisGenome)'
+    )
+    parser.add_argument(
+        '--style_img_name', type=str,
+        default="training_data/styles/starrynight.jpg",
+        help='Path of the style image file'
+    )
+    parser.add_argument(
+        '--img_train_size', type=int,
+        default=512,
+        help='Size of the training images (square)'
+    )
+    parser.add_argument(
+        '--batch_size', type=int,
+        default=8,
+        help='Batch size for training'
+    )
+    parser.add_argument(
+        '--nb_epochs', type=int,
+        default=1,
+        help='Number of epochs for training'
+    )
+    parser.add_argument(
+        '--content_weight', type=float,
+        default=1e5,
+        help='Content loss weighting factor'
+    )
+    parser.add_argument(
+        '--style_weight', type=float,
+        default=4e10,
+        help='Style loss weighting factor'
+    )
+    parser.add_argument(
+        '--tv_weight', type=float,
+        default=1e-6,
+        help='Total variation loss weighting factor'
+    )
+    parser.add_argument(
+        '--temporal_weight', type=float,
+        default=1300,
+        help='Temporal loss weighting factor'
+    )
+    parser.add_argument(
+        '--noise_count', type=int,
+        default=1000,
+        help='Number of pixels to modify with noise'
+    )
+    parser.add_argument(
+        '--noise', type=int,
+        default=30,
+        help='Range of noise to add'
+    )
+    parser.add_argument(
+        '--name_model', type=str,
+        default=name_model,
+        help='Name of the model'
+    )
+
+    args = parser.parse_args()
 
     if use_wandb:
         wandb.init(
@@ -192,13 +255,7 @@ def plot_loss(use_wandb=True):
         temporal_weight,
         noise_count,
         noise,
-        name_model
+        name_model,
+        use_wandb=use_wandb
     )
 
-
-if __name__ == '__main__':
-
-    # Check for --nowandb argument
-    import sys
-    use_wandb = not "--nowandb" in sys.argv
-    plot_loss(use_wandb)
