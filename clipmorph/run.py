@@ -6,27 +6,27 @@ from PIL import Image
 from torchvision import transforms as T
 from tqdm import tqdm
 
-from clipmorph.data import load_image, Data, load_data
+from clipmorph.data import load_data
 from clipmorph.nn import FastStyleNet
 
 
-def neural_style_transfer(model_path, content_dir, output_dir):
-    """
-    Apply a model to all images in a directory and save the result in another directory.
+def stylize_video(model, video_path, output_path):
+    video_name = video_path.split('/')[-1].split('.')[0]
 
-    Args:
-        model_path: path to the model
-        content_dir: path to the directory containing the content images
-        output_dir: path to the directory where the output images will be saved
-    """
+    # Create temporary folder for frames
+    temp_folder_name = f'temp_{video_name}'
+    os.makedirs(temp_folder_name, exist_ok=True)
+
+    # Extract frames from video
+    os.system(f'ffmpeg -i {video_path} -q:v 2 {temp_folder_name}/frame_%d.jpg')
 
     style_model = FastStyleNet()
-    style_model.load_state_dict(torch.load(model_path))
+    style_model.load_state_dict(torch.load(model))
     style_model.eval()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     style_model.to(device)
 
-    data = load_data(content_dir, 16)
+    data = load_data(temp_folder_name, 16)
     num_images = data.dataset.num_images
 
     progress_bar = tqdm(total=num_images, desc="Stylizing images")
@@ -50,19 +50,38 @@ def neural_style_transfer(model_path, content_dir, output_dir):
         stylized = stylized.clone().clamp(0, 255).numpy()
         stylized = stylized.transpose(1, 2, 0).astype("uint8")
         stylized = Image.fromarray(stylized)
-        stylized_path = output_dir + stylized_img_names[i].split("/")[
-            -1].split(".")[0] + "stylized.jpg"
+        stylized_path = temp_folder_name + stylized_img_names[i].split("/")[
+            -1].split(".")[0] + "_stylized.jpg"
         stylized.save(stylized_path)
         print('Saving image to', stylized_path)
 
-    """
-    stylized = stylized[0]
+    # Create video from frames
+    os.system(f'ffmpeg -i {temp_folder_name}/frame_%d_stylized.jpg -q:v 2'
+              f' {output_path}')
+
+    # Remove temporary folder
+    os.system(f'rm -rf {temp_folder_name}')
+
+def stylize_image(model, image_path, output_path):
+    style_model = FastStyleNet()
+    style_model.load_state_dict(torch.load(model))
+    style_model.eval()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    style_model.to(device)
+
+    img = Image.open(image_path)
+    transform = T.Compose([
+        T.ToTensor(),
+        T.Lambda(lambda x: x.mul(255))
+    ])
+    img = transform(img)
+    img = img.unsqueeze(0).to(device)
+    with torch.no_grad():
+        stylized = style_model(img).squeeze().cpu()
     stylized = stylized.clone().clamp(0, 255).numpy()
     stylized = stylized.transpose(1, 2, 0).astype("uint8")
     stylized = Image.fromarray(stylized)
-    stylized.save(output_dir + str(i) + ".jpg")
-    """
-
+    stylized.save(output_path)
 
 
 if __name__ == '__main__':
@@ -88,5 +107,11 @@ if __name__ == '__main__':
     source = args.source
     output = args.output
     if output is None:
-        output = source
-    neural_style_transfer(model, source, output)
+        output = source.split('.')[0] + '_stylized.' + source.split('.')[1]
+
+    # Video
+    if source.split('.')[1] == 'mp4':
+        stylize_video(model, source, output)
+    # Image
+    else:
+        stylize_image(model, source, output)
