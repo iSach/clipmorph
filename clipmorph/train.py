@@ -53,7 +53,7 @@ def train(
         The trained model.
     """
 
-    data_loader = load_data(train_img_dir, img_train_size, batch_size)
+    data_loader = load_data(train_img_dir, batch_size, img_size=img_train_size)
 
     fsn = FastStyleNet().to(device)
     optimizer = Adam(fsn.parameters(), lr=1e-3)
@@ -173,12 +173,12 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         '--content_weight', type=float,
-        default=1e5,
+        default=1.0,
         help='Content loss weighting factor'
     )
     parser.add_argument(
         '--style_weight', type=float,
-        default=4e10,
+        default=30.0,
         help='Style loss weighting factor'
     )
     parser.add_argument(
@@ -188,7 +188,7 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         '--temporal_weight', type=float,
-        default=1300,
+        default=1e1,
         help='Temporal loss weighting factor'
     )
     parser.add_argument(

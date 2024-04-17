@@ -6,7 +6,7 @@ from torchvision import transforms as T
 
 
 class Data(data.Dataset):
-    def __init__(self, root_dir, img_size):
+    def __init__(self, root_dir, img_size=None):
         super().__init__()
         self.root_dir = root_dir
         self.img_names = os.listdir(root_dir)
@@ -20,13 +20,19 @@ class Data(data.Dataset):
         img_path = self.root_dir + "/" + img_name
         img = Image.open(img_path, mode='r')
 
-        # Resize image and rescale pixel values from [0,1] to [0,255].
-        transform = T.Compose([
-            T.Resize(self.img_size),
-            T.CenterCrop(self.img_size),
-            T.ToTensor(),
-            T.Lambda(lambda x: x.mul(255))
-        ])
+        if self.img_size is None:
+            transform = T.Compose([
+                T.ToTensor(),
+                T.Lambda(lambda x: x.mul(255))
+            ])
+        else:
+            # Resize image and rescale pixel values from [0,1] to [0,255].
+            transform = T.Compose([
+                T.Resize(self.img_size),
+                T.CenterCrop(self.img_size),
+                T.ToTensor(),
+                T.Lambda(lambda x: x.mul(255))
+            ])
 
         # Expand 1-channel images to 3 channels.
         img = transform(img)
@@ -35,13 +41,13 @@ class Data(data.Dataset):
         return img
 
 
-def load_data(root_dir, img_size, batch_size):
+def load_data(root_dir, batch_size, img_size=None):
     data_train = Data(root_dir, img_size)
 
     train_data_loader = data.DataLoader(
         data_train,
         batch_size=batch_size,
-        shuffle=True,
+        shuffle=img_size is not None,
         pin_memory=True
     )
 

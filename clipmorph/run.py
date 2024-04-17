@@ -1,3 +1,4 @@
+import argparse
 import os
 
 import torch
@@ -5,7 +6,7 @@ from PIL import Image
 from torchvision import transforms as T
 from tqdm import tqdm
 
-from clipmorph.data import load_image
+from clipmorph.data import load_image, Data, load_data
 from clipmorph.nn import FastStyleNet
 
 
@@ -21,28 +22,49 @@ def neural_style_transfer(model_path, content_dir, output_dir):
 
     style_model = FastStyleNet()
     style_model.load_state_dict(torch.load(model_path))
+    style_model.eval()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     style_model.to(device)
 
-    img_list = os.listdir(content_dir)
+    data = load_data(content_dir, 16)
 
-    for i in tqdm(range(len(img_list))):
-        img_path = content_dir + str(i) + ".jpg"
-        content_image = load_image(img_path)
-        content_trans = T.Compose([
-            T.ToTensor(),
-            T.Lambda(lambda x: x.mul(255))
-        ])
-        content_img = content_trans(content_image)
-
-        if content_img.size()[0] != 3:
-            content_img = content_img.expand(3, -1, -1)
-        content_img = content_img.unsqueeze(0).to(device)
+    stylized_imgs = []
+    for i, img in tqdm(enumerate(data)):
+        img = img.to(device)
 
         with torch.no_grad():
-            stylized = style_model(content_img).cpu()
-        stylized = stylized[0]
-        stylized = stylized.clone().clamp(0, 255).numpy()
-        stylized = stylized.transpose(1, 2, 0).astype("uint8")
-        stylized = Image.fromarray(stylized)
-        stylized.save(output_dir + str(i) + ".jpg")
+            stylized = style_model(img).cpu()
+
+        stylized_imgs.append(stylized)
+
+    stylized_imgs = torch.cat(stylized_imgs, dim=0)
+    print(stylized_imgs.shape)
+
+    """
+    stylized = stylized[0]
+    stylized = stylized.clone().clamp(0, 255).numpy()
+    stylized = stylized.transpose(1, 2, 0).astype("uint8")
+    stylized = Image.fromarray(stylized)
+    stylized.save(output_dir + str(i) + ".jpg")
+    """
+
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Run a pre-trained model.')
+    parser.add_argument(
+        '--model', type=str,
+        default="models/gericault.pth",
+        help='Path to the model .pth file',
+    )
+    parser.add_argument(
+        '--source', type=str,
+        help='Path of the image/video to stylize',
+    )
+    parser.add_argument(
+        '--output', type=str,
+        help='Path of the output image/video',
+    )
+
+    args = parser.parse_args()
+    neural_style_transfer(args.model, args.source, args.output)
