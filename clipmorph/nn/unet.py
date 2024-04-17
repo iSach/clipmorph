@@ -41,10 +41,16 @@ class FastStyleNet(nn.Module):
         )
 
     def forward(self, x):
+        # TODO: Work only in 0.1:
+        #     -> remove /255 in vgg norm thing
+        #     -> change dataloader
+        #     -> this should remove the *255 followed by the /255 between
+        #           unet & vgg (i.e. vgg(unet(x)).
         x.div_(255.0)
         y = self.convBlock(x)
         y = self.residualBlock(y)
         y = self.convTransBlock(y)
+        y.sigmoid_()
         y.mul_(255.0)
         return y
 
