@@ -123,8 +123,6 @@ def train(
             }
 
             if step % 50 == 0:
-                print(y[0].min(), y[0].max())
-                print(x[0].min(), x[0].max())
                 np_img = y[0].permute(1, 2, 0).detach().cpu().numpy()
                 in_np_img = x[0].permute(1, 2, 0).detach().cpu().numpy()
                 np_img = np.concatenate((in_np_img, np_img), axis=1)
