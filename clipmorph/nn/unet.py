@@ -40,6 +40,8 @@ class FastStyleNet(nn.Module):
             ConvoLayer(32, 3, kernel_size=9, stride=1, padding=4),
         )
 
+        self.sigmoid = nn.Sigmoid()
+
     def forward(self, x):
         # TODO: Work only in 0.1:
         #     -> remove /255 in vgg norm thing
@@ -50,7 +52,7 @@ class FastStyleNet(nn.Module):
         y = self.convBlock(x)
         y = self.residualBlock(y)
         y = self.convTransBlock(y)
-        y.sigmoid_()
+        y = self.sigmoid(y)
         y.mul_(255.0)
         return y
 
