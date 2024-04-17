@@ -91,15 +91,9 @@ def train(
             optimizer.zero_grad()
 
             # noise_img = torch.randn_like(x) * 0.1
-            num_non_zero_pixels = int(0.1 * C * H * W)
-            indices = torch.randint(0, C * H * W, (num_non_zero_pixels,))
-            x_indices = indices // (W * C)
-            y_indices = (indices % (W * C)) // C
-            channel_indices = indices % C
-            noise_img = torch.zeros_like(x)
-            noise_img[channel_indices, x_indices, y_indices] = torch.randint(
-                -noise, noise + 1, (num_non_zero_pixels,)
-            )
+            noise_img = torch.randint_like(x, -noise, noise + 1, device=device)
+            mask = torch.rand_like(x, device=device) < 0.05
+            noise_img = noise_img * mask.float()
 
             y_noisy = fsn(x + noise_img)
             y_noisy = norm_batch_vgg(y_noisy)
