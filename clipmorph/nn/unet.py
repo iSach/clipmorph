@@ -48,12 +48,12 @@ class FastStyleNet(nn.Module):
         #     -> change dataloader
         #     -> this should remove the *255 followed by the /255 between
         #           unet & vgg (i.e. vgg(unet(x)).
-        x.div_(255.0)
+        x = x / 255.0
         y = self.convBlock(x)
         y = self.residualBlock(y)
         y = self.convTransBlock(y)
         y = self.sigmoid(y)
-        y.mul_(255.0)
+        y = y * 255.0
         return y
 
 

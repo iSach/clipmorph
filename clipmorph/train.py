@@ -236,7 +236,7 @@ if __name__ == '__main__':
         run_name = args.run_name + f" ({name_model})"
         wandb.init(
             project="clipmorph",
-            name="debug",
+            name=run_name,
             config={
                 "train_img_dir": train_img_dir,
                 "style_img_name": style_img_name,
