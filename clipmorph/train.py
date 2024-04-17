@@ -63,6 +63,9 @@ def train(
     criterion = nn.MSELoss()
     vgg = Vgg19().to(device)
 
+    fsn = fsn.compile()
+    vgg = vgg.compile()
+
     transfo_style = T.Compose([
         T.ToTensor(),
         T.Lambda(lambda x: x.mul(255))
@@ -114,11 +117,11 @@ def train(
             L_total = L_content + L_style  # + L_tv + L_temporal
 
             log_dict = {
-                    "total_loss": L_total.item(),
-                    "content_loss": L_content.item(),
-                    "style_loss": L_style.item(),
-                    "temporal_loss": L_temporal.item(),
-                    "tv_loss": L_tv.item()
+                "total_loss": L_total.item(),
+                "content_loss": L_content.item(),
+                "style_loss": L_style.item(),
+                "temporal_loss": L_temporal.item(),
+                "tv_loss": L_tv.item()
             }
 
             if step % 50 == 0:
