@@ -11,6 +11,8 @@ from clipmorph.nn import FastStyleNet
 
 
 def stylize_video(model, video_path, output_path):
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
     video_name = video_path.split('/')[-1].split('.')[0]
 
     # Create temporary folder for frames
@@ -22,9 +24,11 @@ def stylize_video(model, video_path, output_path):
               f' {temp_folder_name}/frame_%d.jpg')
 
     style_model = FastStyleNet()
-    style_model.load_state_dict(torch.load(model))
+    style_model.load_state_dict(
+        torch.load(model, map_location=device),
+        strict=False,
+    )
     style_model.eval()
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     style_model.to(device)
 
     data = load_data(temp_folder_name, 16)
@@ -68,10 +72,14 @@ def stylize_video(model, video_path, output_path):
     os.system(f'rm -rf {temp_folder_name}')
 
 def stylize_image(model, image_path, output_path):
-    style_model = FastStyleNet()
-    style_model.load_state_dict(torch.load(model))
-    style_model.eval()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    style_model = FastStyleNet()
+    style_model.load_state_dict(
+        torch.load(model, map_location=device),
+        strict=False,
+    )
+    style_model.eval()
     style_model.to(device)
 
     img = Image.open(image_path)
