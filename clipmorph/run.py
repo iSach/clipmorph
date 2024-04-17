@@ -60,11 +60,15 @@ if __name__ == '__main__':
     parser.add_argument(
         '--source', type=str,
         help='Path of the image/video to stylize',
+        required=True,
     )
     parser.add_argument(
         '--output', type=str,
+        default=None,
         help='Path of the output image/video',
     )
 
     args = parser.parse_args()
+    if args.output is None:
+        args.output = os.path.splitext(args.source)[0] + "_stylized" + os.path.splitext(args.source)[1]
     neural_style_transfer(args.model, args.source, args.output)
