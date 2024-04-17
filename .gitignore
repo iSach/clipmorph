@@ -6,6 +6,8 @@ training_data/images/
 data/
 output/
 
+clipmorph.egg-info
+
 # Created by https://www.toptal.com/developers/gitignore/api/macos,windows,linux,jetbrains+all,pycharm+all,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,windows,linux,jetbrains+all,pycharm+all,visualstudiocode
 
