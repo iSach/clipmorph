@@ -63,12 +63,14 @@ def train(
     fsn.compile()
     vgg.compile()
 
-    transfo_style = T.Compose([
+    transform = T.Compose([
+        T.Resize(img_train_size),
+        T.CenterCrop(img_train_size),
         T.ToTensor(),
         T.Lambda(lambda x: x.mul(255))
     ])
     style_img = load_image(style_img_path)
-    style_img = transfo_style(style_img)
+    style_img = transform(style_img)
     style_img = style_img.repeat(batch_size, 1, 1, 1).to(device)
     style_img = norm_batch_vgg(style_img)
 

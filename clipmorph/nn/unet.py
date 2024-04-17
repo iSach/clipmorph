@@ -54,7 +54,6 @@ class FastStyleNet(nn.Module):
         y = self.convBlock(x)
         y = self.residualBlock(y)
         y = self.convTransBlock(y)
-        y = self.normalization(y)
         y = self.sigmoid(y)
         y = y * 255.0
         return y
