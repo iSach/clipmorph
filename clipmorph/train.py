@@ -76,11 +76,7 @@ def train(
     feat_style = vgg(style_img)
     gram_style = [gram_matrix(i) for i in feat_style]
 
-    tot_loss = []
-    styl_loss = []
-    content_loss = []
-    temp_loss = []
-    tv_loss = []
+
     for e in range(nb_epochs):
         fsn.train()
         count = 0
@@ -213,7 +209,7 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         '--name_model', type=str,
-        default=name_model,
+        default=None,
         help='Name of the model'
     )
     parser.add_argument(
@@ -235,6 +231,8 @@ if __name__ == '__main__':
     noise_count = args.noise_count
     noise = args.noise
     name_model = args.name_model
+    if name_model is None:
+        name_model = style_img_name.split("/")[-1].split(".")[0]
     use_wandb = args.use_wandb
 
     if use_wandb:
