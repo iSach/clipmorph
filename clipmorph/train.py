@@ -71,7 +71,7 @@ def train(
     style_img = load_image(style_img_path)
     style_img = transform(style_img)
     style_img = style_img.repeat(batch_size, 1, 1, 1).to(device)
-    style_img = norm_batch_vgg(style_img)
+    style_img = vgg.normalize_batch(style_img)
 
     # Get style feature represenbtation
     feat_style = vgg(style_img)
