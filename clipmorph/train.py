@@ -26,9 +26,8 @@ def train(
         temporal_weight,
         noise_count,
         noise,
-        name_model,
+        model_name,
         use_wandb=True,
-        device='cuda'
 ):
     """
     Train a fast style network to generate an image with the style of the style image.
@@ -46,22 +45,34 @@ def train(
         temporal_weight: Weight of the temporal loss
         noise_count: Number of pixels to add noise to
         noise: Noise range
-        name_model: Name of the model
-        device: Device to use (default: 'cuda')
+        model_name: Name of the model
 
     Returns:
         The trained model.
     """
 
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    print(f"Starting training on device {device}.")
+
     data_loader = load_data(train_img_dir, batch_size, img_size=img_train_size)
 
+    print(f"Data loaded: {len(data_loader.dataset)} images. "
+          f"{len(data_loader)} batches.")
+
     fsn = FastStyleNet().to(device)
+    vgg = Vgg19(device=device).to(device)
+    print("Models loaded.")
+    fsn_params = sum(p.numel() for p in fsn.parameters() if p.requires_grad)
+    print(f"FastStyleNet params: {fsn_params}")
+    if torch.cuda.is_available():
+        print('Cuda enabled. Compiling models...')
+        fsn.compile()
+        vgg.compile()
+        print('Models compiled.')
+
     optimizer = Adam(fsn.parameters(), lr=1e-3)
     criterion = nn.MSELoss()
-    vgg = Vgg19(device=device).to(device)
-
-    fsn.compile()
-    vgg.compile()
 
     transform = T.Compose([
         T.Resize(img_train_size),
@@ -82,6 +93,8 @@ def train(
 
     data_iter = iter(data_loader)
 
+    print("Starting training loop...")
+    progress_bar = tqdm(range(num_iters))
     for step in range(num_iters):
         try:
             x = next(data_iter)
@@ -139,8 +152,10 @@ def train(
         L_total.backward()
         optimizer.step()
 
+        progress_bar.update(1)
+
     # Save model
-    save_model = name_model + ".pth"
+    save_model = model_name + ".pth"
     path_model = "./models/" + save_model
     torch.save(fsn.state_dict(), path_model)
 
@@ -230,13 +245,13 @@ if __name__ == '__main__':
     temporal_weight = args.temporal_weight
     noise_count = args.noise_count
     noise = args.noise
-    name_model = args.name_model
-    if name_model is None:
-        name_model = style_img_name.split("/")[-1].split(".")[0]
+    model_name = args.model_name
+    if model_name is None:
+        model_name = style_img_name.split("/")[-1].split(".")[0]
     use_wandb = args.wandb
 
     if use_wandb:
-        run_name = args.run_name + f" ({name_model})"
+        run_name = args.run_name + f" ({model_name})"
         wandb.init(
             project="clipmorph",
             name=run_name,
@@ -252,7 +267,7 @@ if __name__ == '__main__':
                 "temporal_weight": temporal_weight,
                 "noise_count": noise_count,
                 "noise": noise,
-                "name_model": name_model
+                "name_model": model_name
             }
         )
 
@@ -268,6 +283,6 @@ if __name__ == '__main__':
         temporal_weight,
         noise_count,
         noise,
-        name_model,
+        model_name,
         use_wandb=use_wandb
     )
