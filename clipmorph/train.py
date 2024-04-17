@@ -173,12 +173,12 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         '--content_weight', type=float,
-        default=1.0,
+        default=1e5,
         help='Content loss weighting factor'
     )
     parser.add_argument(
         '--style_weight', type=float,
-        default=30.0,
+        default=4e10,
         help='Style loss weighting factor'
     )
     parser.add_argument(
@@ -188,7 +188,7 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         '--temporal_weight', type=float,
-        default=1e1,
+        default=1000,
         help='Temporal loss weighting factor'
     )
     parser.add_argument(

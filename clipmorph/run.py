@@ -47,6 +47,7 @@ def stylize_video(model, video_path, output_path):
 
     stylized_imgs = torch.cat(stylized_imgs, dim=0)
 
+    save_progress = tqdm(total=num_images, desc="Saving images")
     for i, stylized in enumerate(stylized_imgs):
         stylized = stylized.clone().clamp(0, 255).numpy()
         stylized = stylized.transpose(1, 2, 0).astype("uint8")
@@ -55,7 +56,8 @@ def stylize_video(model, video_path, output_path):
             "/")[
             -1].split(".")[0] + "_stylized.jpg"
         stylized.save(stylized_path)
-        print('Saving image to', stylized_path)
+
+        save_progress.update(1)
 
     # Create video from frames
     os.system(f'ffmpeg -hide_banner -loglevel error -i '
@@ -110,7 +112,8 @@ if __name__ == '__main__':
     source = args.source
     output = args.output
     if output is None:
-        output = source.split('.')[0] + '_stylized.' + source.split('.')[1]
+        model_name = model.split('/')[-1].split('.')[0]
+        output = source.split('.')[0] + f'_{model_name}.' + source.split('.')[1]
 
     # Video
     if source.split('.')[1] == 'mp4':
