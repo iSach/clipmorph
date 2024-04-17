@@ -10,7 +10,6 @@ from tqdm import tqdm
 
 from clipmorph.data import load_data, load_image
 from clipmorph.nn import FastStyleNet, Vgg19
-from clipmorph.nn.backbone import norm_batch_vgg
 from clipmorph.util import gram_matrix
 from clipmorph.util.losses import style_loss, tot_variation_loss
 
@@ -58,7 +57,7 @@ def train(
     fsn = FastStyleNet().to(device)
     optimizer = Adam(fsn.parameters(), lr=1e-3)
     criterion = nn.MSELoss()
-    vgg = Vgg19().to(device)
+    vgg = Vgg19(device=device).to(device)
 
     fsn.compile()
     vgg.compile()
@@ -98,11 +97,11 @@ def train(
             noise_img = noise_img * mask.float()
 
             y_noisy = fsn(x + noise_img)
-            y_noisy = norm_batch_vgg(y_noisy)
+            y_noisy = vgg.normalize_batch(y_noisy)
 
             y = fsn(x)
-            x = norm_batch_vgg(x)
-            y = norm_batch_vgg(y)
+            x = vgg.normalize_batch(x)
+            y = vgg.normalize_batch(y)
             x_feat = vgg(x)
             y_feat = vgg(y)
             # Features at relu1_2, relu2_2, relu3_3, relu4_3

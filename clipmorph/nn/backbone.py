@@ -1,10 +1,11 @@
 from torch import nn
 import torchvision as tv
 from torchvision.models import VGG19_Weights
+from wandb.wandb_torch import torch
 
 
 class Vgg19(nn.Module):
-    def __init__(self):
+    def __init__(self, device='cpu'):
         super(Vgg19, self).__init__()
         vgg_features = tv.models.vgg19(weights=VGG19_Weights.DEFAULT).features
         self.block1 = nn.Sequential()
@@ -23,6 +24,12 @@ class Vgg19(nn.Module):
         for param in self.parameters():
             param.requires_grad = False
 
+        self.mean = torch.tensor([0.485, 0.456, 0.406]).to(device)
+        self.std = torch.tensor([0.229, 0.224, 0.225]).to(device)
+
+        self.mean = self.mean.view(-1, 1, 1)
+        self.std = self.std.view(-1, 1, 1)
+
     def forward(self, x):
         # Return outputs of ['relu1_2', 'relu2_2', 'relu3_3', 'relu4_3']
         vgg_outputs = []
@@ -37,11 +44,6 @@ class Vgg19(nn.Module):
 
         return vgg_outputs
 
-
-
-def norm_batch_vgg(batch):
-    #Normalization due to how VGG19 networks were trained
-    mean = batch.new_tensor([0.485, 0.456, 0.406]).view(-1, 1, 1)
-    std = batch.new_tensor([0.229, 0.224, 0.225]).view(-1, 1, 1)
-    batch = batch.div_(255.0) # because previously multiplied by 255.
-    return (batch - mean) / std
+    def normalize_batch(self, batch):
+        batch = batch / 255.0
+        return (batch - self.mean) / self.std
