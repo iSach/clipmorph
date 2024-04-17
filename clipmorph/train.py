@@ -209,6 +209,11 @@ if __name__ == '__main__':
         action=argparse.BooleanOptionalAction,
         default=True,
     )
+    parser.add_argument(
+        "--run-name", type=str,
+        default="",
+        help="Name of the run",
+    )
 
     args = parser.parse_args()
     train_img_dir = args.train_img_dir
@@ -228,6 +233,7 @@ if __name__ == '__main__':
     use_wandb = args.wandb
 
     if use_wandb:
+        run_name = args.run_name + f" ({name_model})"
         wandb.init(
             project="clipmorph",
             name="debug",
