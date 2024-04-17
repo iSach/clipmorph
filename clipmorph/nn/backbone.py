@@ -1,8 +1,7 @@
+import torch
 from torch import nn
 import torchvision as tv
 from torchvision.models import VGG19_Weights
-from wandb.wandb_torch import torch
-
 
 class Vgg19(nn.Module):
     def __init__(self, device='cpu'):
