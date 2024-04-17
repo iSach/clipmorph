@@ -233,7 +233,7 @@ if __name__ == '__main__':
     name_model = args.name_model
     if name_model is None:
         name_model = style_img_name.split("/")[-1].split(".")[0]
-    use_wandb = args.use_wandb
+    use_wandb = args.wandb
 
     if use_wandb:
         wandb.init(
