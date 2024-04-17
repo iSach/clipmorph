@@ -1,5 +1,8 @@
 from torch import nn
 
+from clipmorph.nn.backbone import norm_batch_vgg
+
+
 class FastStyleNet(nn.Module):
     def __init__(self):
         super(FastStyleNet, self).__init__()
@@ -38,9 +41,11 @@ class FastStyleNet(nn.Module):
         )
 
     def forward(self, x):
+        x.div_(255.0)
         y = self.convBlock(x)
         y = self.residualBlock(y)
         y = self.convTransBlock(y)
+        y.mul_(255.0)
         return y
 
 
