@@ -32,21 +32,28 @@ def neural_style_transfer(model_path, content_dir, output_dir):
     progress_bar = tqdm(total=num_images, desc="Stylizing images")
 
     stylized_imgs = []
+    stylized_img_names = []
     for img, names in data:
-        print(img.shape)
-        print(names)
-        print()
         img = img.to(device)
 
         with torch.no_grad():
             stylized = style_model(img).cpu()
 
         stylized_imgs.append(stylized)
+        stylized_img_names.extend(names)
 
         progress_bar.update(len(names))
 
     stylized_imgs = torch.cat(stylized_imgs, dim=0)
-    print(stylized_imgs.shape)
+
+    for i, stylized in enumerate(stylized_imgs):
+        stylized = stylized.clone().clamp(0, 255).numpy()
+        stylized = stylized.transpose(1, 2, 0).astype("uint8")
+        stylized = Image.fromarray(stylized)
+        stylized_path = output_dir + stylized_img_names[i].split("/")[
+            -1].split(".")[0] + "stylized.jpg"
+        stylized.save(stylized_path)
+        print('Saving image to', stylized_path)
 
     """
     stylized = stylized[0]
@@ -77,6 +84,9 @@ if __name__ == '__main__':
     )
 
     args = parser.parse_args()
-    if args.output is None:
-        args.output = os.path.splitext(args.source)[0] + "_stylized" + os.path.splitext(args.source)[1]
-    neural_style_transfer(args.model, args.source, args.output)
+    model = args.model
+    source = args.source
+    output = args.output
+    if output is None:
+        output = source
+    neural_style_transfer(model, source, output)
