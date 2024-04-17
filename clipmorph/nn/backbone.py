@@ -1,10 +1,12 @@
 from torch import nn
 import torchvision as tv
+from torchvision.models import VGG19_Weights
+
 
 class Vgg19(nn.Module):
     def __init__(self):
         super(Vgg19, self).__init__()
-        vgg_features = tv.models.vgg19(pretrained=True).features
+        vgg_features = tv.models.vgg19(weights=VGG19_Weights.DEFAULT).features
         self.block1 = nn.Sequential()
         self.block2 = nn.Sequential()
         self.block3 = nn.Sequential()

@@ -114,7 +114,7 @@ def train(
 
             # Small changes in the input should result in small changes in the output.
             L_temporal = temporal_weight * criterion(y, y_noisy)
-            L_total = L_content + L_style  # + L_tv + L_temporal
+            L_total = L_content + L_style + L_tv + L_temporal
 
             log_dict = {
                 "total_loss": L_total.item(),
