@@ -30,7 +30,7 @@ stylize videos in real-time (~25-30 frames per second).
 Please find a more detailed description of the product itself [here](canvas.pdf).
 
 > _This project is developed as part of the course "Machine Learning Systems 
-Design" at the University of Liège ([INFO9023](https://github.com/ThomasVrancken/info9023-mlops))._
+Design" @ ULiège ([INFO9023](https://github.com/ThomasVrancken/info9023-mlops))._
 
 ## Repository Structure
 
