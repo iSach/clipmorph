@@ -1,7 +1,6 @@
 from torch import nn
 
 
-
 class FastStyleNet(nn.Module):
     def __init__(self):
         super(FastStyleNet, self).__init__()
@@ -16,7 +15,7 @@ class FastStyleNet(nn.Module):
             nn.ReLU(),
             ConvoLayer(64, 128, kernel_size=3, stride=2),
             nn.InstanceNorm2d(128, affine=True),
-            nn.ReLU()
+            nn.ReLU(),
         )
 
         # Residual block
@@ -25,7 +24,7 @@ class FastStyleNet(nn.Module):
             ResidualLayer(128),
             ResidualLayer(128),
             ResidualLayer(128),
-            ResidualLayer(128)
+            ResidualLayer(128),
         )
 
         # Deconvolution block
@@ -57,8 +56,7 @@ class FastStyleNet(nn.Module):
 
 
 class ConvoLayer(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, stride,
-                 padding=1):
+    def __init__(self, in_channels, out_channels, kernel_size, stride, padding=1):
         super(ConvoLayer, self).__init__()
         self.conv2d = nn.Conv2d(in_channels, out_channels, kernel_size, stride)
         self.reflection_pad = nn.ReflectionPad2d(padding)
@@ -87,12 +85,19 @@ class ResidualLayer(nn.Module):
 
 
 class ConvTrans(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, stride,
-                 padding=1, output_padding=1):
+    def __init__(
+        self,
+        in_channels,
+        out_channels,
+        kernel_size,
+        stride,
+        padding=1,
+        output_padding=1,
+    ):
         super(ConvTrans, self).__init__()
-        self.convTrans = nn.ConvTranspose2d(in_channels, out_channels,
-                                            kernel_size, stride, padding,
-                                            output_padding)
+        self.convTrans = nn.ConvTranspose2d(
+            in_channels, out_channels, kernel_size, stride, padding, output_padding
+        )
 
     def forward(self, x):
         return self.convTrans(x)

@@ -2,9 +2,9 @@ import torch
 
 from clipmorph.nn.backbone import Vgg19
 
-def test_vgg_load():
 
-    vgg = Vgg19(device='cpu')
+def test_vgg_load():
+    vgg = Vgg19(device="cpu")
     assert vgg is not None
 
     X = torch.randn(4, 3, 224, 224)

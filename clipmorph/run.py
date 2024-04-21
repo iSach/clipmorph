@@ -13,15 +13,17 @@ from clipmorph.nn import FastStyleNet
 def stylize_video(model, video_path, output_path):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    video_name = video_path.split('/')[-1].split('.')[0]
+    video_name = video_path.split("/")[-1].split(".")[0]
 
     # Create temporary folder for frames
-    temp_folder_name = f'temp_{video_name}'
+    temp_folder_name = f"temp_{video_name}"
     os.makedirs(temp_folder_name, exist_ok=True)
 
     # Extract frames from video
-    os.system(f'ffmpeg -hide_banner -loglevel error -i {video_path} -q:v 2'
-              f' {temp_folder_name}/frame_%d.jpg')
+    os.system(
+        f"ffmpeg -hide_banner -loglevel error -i {video_path} -q:v 2"
+        f" {temp_folder_name}/frame_%d.jpg"
+    )
 
     style_model = FastStyleNet()
     style_model.load_state_dict(
@@ -56,20 +58,26 @@ def stylize_video(model, video_path, output_path):
         stylized = stylized.clone().clamp(0, 255).numpy()
         stylized = stylized.transpose(1, 2, 0).astype("uint8")
         stylized = Image.fromarray(stylized)
-        stylized_path = temp_folder_name + "/" + stylized_img_names[i].split(
-            "/")[
-            -1].split(".")[0] + "_stylized.jpg"
+        stylized_path = (
+            temp_folder_name
+            + "/"
+            + stylized_img_names[i].split("/")[-1].split(".")[0]
+            + "_stylized.jpg"
+        )
         stylized.save(stylized_path)
 
         save_progress.update(1)
 
     # Create video from frames
-    os.system(f'ffmpeg -hide_banner -loglevel error -i '
-              f'{temp_folder_name}/frame_%d_stylized.jpg -q:v 2'
-              f' {output_path}')
+    os.system(
+        f"ffmpeg -hide_banner -loglevel error -i "
+        f"{temp_folder_name}/frame_%d_stylized.jpg -q:v 2"
+        f" {output_path}"
+    )
 
     # Remove temporary folder
-    os.system(f'rm -rf {temp_folder_name}')
+    os.system(f"rm -rf {temp_folder_name}")
+
 
 def stylize_image(model, image_path, output_path):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -83,10 +91,7 @@ def stylize_image(model, image_path, output_path):
     style_model.to(device)
 
     img = Image.open(image_path)
-    transform = T.Compose([
-        T.ToTensor(),
-        T.Lambda(lambda x: x.mul(255))
-    ])
+    transform = T.Compose([T.ToTensor(), T.Lambda(lambda x: x.mul(255))])
     img = transform(img)
     img = img.unsqueeze(0).to(device)
     with torch.no_grad():
@@ -97,22 +102,25 @@ def stylize_image(model, image_path, output_path):
     stylized.save(output_path)
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Run a pre-trained model.')
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Run a pre-trained model.")
     parser.add_argument(
-        '--model', type=str,
+        "--model",
+        type=str,
         default="models/gericault.pth",
-        help='Path to the model .pth file',
+        help="Path to the model .pth file",
     )
     parser.add_argument(
-        '--source', type=str,
-        help='Path of the image/video to stylize',
+        "--source",
+        type=str,
+        help="Path of the image/video to stylize",
         required=True,
     )
     parser.add_argument(
-        '--output', type=str,
+        "--output",
+        type=str,
         default=None,
-        help='Path of the output image/video',
+        help="Path of the output image/video",
     )
 
     args = parser.parse_args()
@@ -120,11 +128,11 @@ if __name__ == '__main__':
     source = args.source
     output = args.output
     if output is None:
-        model_name = model.split('/')[-1].split('.')[0]
-        output = source.split('.')[0] + f'_{model_name}.' + source.split('.')[1]
+        model_name = model.split("/")[-1].split(".")[0]
+        output = source.split(".")[0] + f"_{model_name}." + source.split(".")[1]
 
     # Video
-    if source.split('.')[1] == 'mp4':
+    if source.split(".")[1] == "mp4":
         stylize_video(model, source, output)
     # Image
     else:

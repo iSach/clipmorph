@@ -2,6 +2,7 @@ import torch
 
 from clipmorph.nn.unet import FastStyleNet
 
+
 def test_faststylenet():
     """Test FastStyleNet creation & forward pass."""
 

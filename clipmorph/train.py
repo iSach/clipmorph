@@ -15,19 +15,19 @@ from clipmorph.util.losses import style_loss, tot_variation_loss
 
 
 def train(
-        train_img_dir,
-        img_train_size,
-        style_img_path,
-        batch_size,
-        num_iters,
-        content_weight,
-        style_weight,
-        tv_weight,
-        temporal_weight,
-        noise_count,
-        noise,
-        model_name,
-        use_wandb=True,
+    train_img_dir,
+    img_train_size,
+    style_img_path,
+    batch_size,
+    num_iters,
+    content_weight,
+    style_weight,
+    tv_weight,
+    temporal_weight,
+    noise_count,
+    noise,
+    model_name,
+    use_wandb=True,
 ):
     """
     Train a fast style network to generate an image with the style of the style image.
@@ -57,8 +57,10 @@ def train(
 
     data_loader = load_data(train_img_dir, batch_size, img_size=img_train_size)
 
-    print(f"Data loaded: {len(data_loader.dataset)} images. "
-          f"{len(data_loader)} batches.")
+    print(
+        f"Data loaded: {len(data_loader.dataset)} images. "
+        f"{len(data_loader)} batches."
+    )
 
     fsn = FastStyleNet().to(device)
     vgg = Vgg19(device=device).to(device)
@@ -66,20 +68,22 @@ def train(
     fsn_params = sum(p.numel() for p in fsn.parameters() if p.requires_grad)
     print(f"FastStyleNet params: {fsn_params}")
     if torch.cuda.is_available():
-        print('Cuda enabled. Compiling models...')
+        print("Cuda enabled. Compiling models...")
         fsn.compile()
         vgg.compile()
-        print('Models compiled.')
+        print("Models compiled.")
 
     optimizer = Adam(fsn.parameters(), lr=1e-3)
     criterion = nn.MSELoss()
 
-    transform = T.Compose([
-        T.Resize(img_train_size),
-        T.CenterCrop(img_train_size),
-        T.ToTensor(),
-        T.Lambda(lambda x: x.mul(255))
-    ])
+    transform = T.Compose(
+        [
+            T.Resize(img_train_size),
+            T.CenterCrop(img_train_size),
+            T.ToTensor(),
+            T.Lambda(lambda x: x.mul(255)),
+        ]
+    )
     style_img = load_image(style_img_path)
     style_img = transform(style_img)
     style_img = style_img.repeat(batch_size, 1, 1, 1).to(device)
@@ -123,8 +127,7 @@ def train(
 
         # Reconstruction (content): "relu2_2"
         L_content = content_weight * criterion(x_feat[1], y_feat[1])
-        L_style = style_weight * style_loss(gram_style, y_feat, criterion,
-                                            n_batch)
+        L_style = style_weight * style_loss(gram_style, y_feat, criterion, n_batch)
         L_tv = tv_weight * tot_variation_loss(y)
 
         # Small changes in the input should result in small changes in the output.
@@ -136,7 +139,7 @@ def train(
             "content_loss": L_content.item(),
             "style_loss": L_style.item(),
             "temporal_loss": L_temporal.item(),
-            "tv_loss": L_tv.item()
+            "tv_loss": L_tv.item(),
         }
 
         if step % 50 == 0:
@@ -160,75 +163,74 @@ def train(
     torch.save(fsn.state_dict(), path_model)
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Train a fast style network')
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Train a fast style network")
     parser.add_argument(
-        '--train-img-dir', type=str,
+        "--train-img-dir",
+        type=str,
         default="training_data/visual_genome/",
-        help='Directory where the training images are stored (e.g., VisGenome)'
+        help="Directory where the training images are stored (e.g., VisGenome)",
     )
     parser.add_argument(
-        '--style-img-name', type=str,
+        "--style-img-name",
+        type=str,
         default="training_data/styles/starrynight.jpg",
-        help='Path of the style image file'
+        help="Path of the style image file",
     )
     parser.add_argument(
-        '--img-train-size', type=int,
+        "--img-train-size",
+        type=int,
         default=512,
-        help='Size of the training images (square)'
+        help="Size of the training images (square)",
     )
     parser.add_argument(
-        '--batch-size', type=int,
-        default=8,
-        help='Batch size for training'
+        "--batch-size", type=int, default=8, help="Batch size for training"
     )
     parser.add_argument(
-        '--num-iters', type=int,
+        "--num-iters",
+        type=int,
         default=10_000,
-        help='Total number of training iterations'
+        help="Total number of training iterations",
     )
     parser.add_argument(
-        '--content-weight', type=float,
+        "--content-weight",
+        type=float,
         default=1e5,
-        help='Content loss weighting factor'
+        help="Content loss weighting factor",
     )
     parser.add_argument(
-        '--style-weight', type=float,
-        default=4e10,
-        help='Style loss weighting factor'
+        "--style-weight", type=float, default=4e10, help="Style loss weighting factor"
     )
     parser.add_argument(
-        '--tv-weight', type=float,
+        "--tv-weight",
+        type=float,
         default=1e-6,
-        help='Total variation loss weighting factor'
+        help="Total variation loss weighting factor",
     )
     parser.add_argument(
-        '--temporal-weight', type=float,
+        "--temporal-weight",
+        type=float,
         default=1000,
-        help='Temporal loss weighting factor'
+        help="Temporal loss weighting factor",
     )
     parser.add_argument(
-        '--noise-count', type=int,
+        "--noise-count",
+        type=int,
         default=1000,
-        help='Number of pixels to modify with noise'
+        help="Number of pixels to modify with noise",
+    )
+    parser.add_argument("--noise", type=int, default=30, help="Range of noise to add")
+    parser.add_argument(
+        "--model-name", type=str, default=None, help="Name of the model"
     )
     parser.add_argument(
-        '--noise', type=int,
-        default=30,
-        help='Range of noise to add'
-    )
-    parser.add_argument(
-        '--model-name', type=str,
-        default=None,
-        help='Name of the model'
-    )
-    parser.add_argument(
-        '--wandb',
+        "--wandb",
         action=argparse.BooleanOptionalAction,
         default=True,
     )
     parser.add_argument(
-        "--run-name", type=str,
+        "--run-name",
+        type=str,
         default="",
         help="Name of the run",
     )
@@ -267,8 +269,8 @@ if __name__ == '__main__':
                 "temporal_weight": temporal_weight,
                 "noise_count": noise_count,
                 "noise": noise,
-                "name_model": model_name
-            }
+                "name_model": model_name,
+            },
         )
 
     train(
@@ -284,5 +286,5 @@ if __name__ == '__main__':
         noise_count,
         noise,
         model_name,
-        use_wandb=use_wandb
+        use_wandb=use_wandb,
     )

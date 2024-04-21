@@ -20,6 +20,7 @@ def style_loss(gram_style_img, curr_img_features, criterion, n_batch):
         L_style += criterion(curr_gram, gram_style[:n_batch, :, :])
     return L_style
 
+
 def tot_variation_loss(img):
     """
     Computes the total variation loss.
@@ -27,6 +28,7 @@ def tot_variation_loss(img):
     From: https://en.wikipedia.org/wiki/Total_variation_denoising
     """
 
-    loss = (torch.sum(torch.abs(img[:, :, :, :-1] - img[:, :, :, 1:]))
-        + torch.sum(torch.abs(img[:, :, :-1, :] - img[:, :, 1:, :])))
+    loss = torch.sum(torch.abs(img[:, :, :, :-1] - img[:, :, :, 1:])) + torch.sum(
+        torch.abs(img[:, :, :-1, :] - img[:, :, 1:, :])
+    )
     return loss
