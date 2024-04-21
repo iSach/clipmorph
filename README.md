@@ -54,7 +54,16 @@ as well as pre-trained styles, training data scripts, and more.
 
 ## Model Development
 
+Please see [DEVELOPMENT.md](DEVELOPMENT.md).
 
+<u>TL;DR</u>: Our model performs neural style transfer. It is a deep 
+U-Net-style 
+network (image-to-image with downsampling and upsampling). It learns to 
+apply a style by minimizing special losses that force the content to stay 
+the same but the style to match another image. We collect a dataset of diverse 
+images (VisualGenome) and several well-known artworks for training. One 
+model is trained per style. We qualitatively validated our model and tracked 
+training status using Weights & Biases.
 
 ## Model Deployment
 
