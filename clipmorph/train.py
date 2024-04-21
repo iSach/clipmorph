@@ -72,7 +72,7 @@ def train(
     fsn_params = sum(p.numel() for p in fsn.parameters() if p.requires_grad)
     print(f"FastStyleNet params: {fsn_params}")
     if torch.cuda.is_available():
-        print("Cuda enabled. Compiling models...")
+        print("Cuda enabled, compiling models...")
         fsn.compile()
         vgg.compile()
         print("Models compiled.")
@@ -89,6 +89,8 @@ def train(
         ]
     )
     style_img = load_image(style_img_path)
+    if use_wandb:
+        wandb.log({"style_image": wandb.Image(style_img[0].permute(1, 2, 0).detach().cpu().numpy())})
     style_img = transform(style_img)
     style_img = style_img.repeat(batch_size, 1, 1, 1).to(device)
     style_img = vgg.normalize_batch(style_img)
@@ -157,6 +159,7 @@ def train(
             wandb.log(log_dict)
 
         L_total.backward()
+        torch.nn.utils.clip_grad_norm(fsn.parameters(), 1.0)
         optimizer.step()
 
         progress_bar.update(1)
