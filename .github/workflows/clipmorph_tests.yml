@@ -21,7 +21,6 @@ jobs:
     - name: Install requirements
       run: |
         pip install uv
-        uv pip install --system --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu    
         uv pip install --system --upgrade -r requirements.txt
         uv pip install --system --upgrade -e .
 
