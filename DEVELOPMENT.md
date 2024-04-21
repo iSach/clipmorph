@@ -66,7 +66,8 @@ instead of the usual 0-255, in order to be fed to the network.
 | ![Image 1](.github/assets/visual_genome/2.jpg)   | ![Image 2](.github/assets/visual_genome/3.jpg) |
 |------------------------------------------------|-----------------------------------------------|
 | ![Image 3](.github/assets/visual_genome/4.jpg) | ![Image 4](.github/assets/visual_genome/5.jpg) |
-**Figure:** First four images of the Visual Genome dataset.
+
+`**Figure:** First four images of the Visual Genome dataset.
 
 ## Training
 
@@ -91,7 +92,9 @@ matter the style. We monitor the training process using Weights & Biases
 ## Evaluation
 
 The task is itself already quite subjective, and the evaluation is 
-therefore almost entirely qualitative. 
+therefore almost entirely qualitative. Quantitatively, we only check the 
+convergence of the model for the different losses, especially content and 
+style, to make sure that the model is learning something. 
 
 We evaluate the model by tracking the evolution of the output images during 
 training, as it represents the capacity of the model to stylize arbitrary 
