@@ -4,11 +4,7 @@ This page describes the development of our model, from choosing and
 collecting data, selecting the architecture, to training and evaluating the
 model.
 
-## Model Descripti
-
-https://github.com/iSach/clipmorph/assets/13520261/3b830f61-0dee-4c43-a42c-a1815cb1244f
-
-on
+## Model Description
 
 Our model is a so-called _"neural style transfer"_ model, i.e., a model 
 based on deep learning that tries to replace the style of a video or an 
@@ -112,7 +108,7 @@ corresponding trained models.
 We also qualitatively validate our model on videos from the Kinetics-600 
 dataset [^12]. Below, you can find an example of a stylized video.
 
-| ![Video input](.github/assets/eval/vid/ski.mp4)     | ![Video VanGogh](.github/assets/eval/vid/ski_starrynight.mp4) |
+| ![Video input](.github/assets/eval/vid/ski.mov)      | ![Video VanGogh](.github/assets/eval/vid/ski_starrynight.mp4) |
 |-----------------------------------------------------|---------------------------------------------------------------|
 | ![Video Muse](.github/assets/eval/vid/ski_muse.mp4) | ![Video Kandinsky](.github/assets/eval/vid/vid_out3.mp4)      |
 
