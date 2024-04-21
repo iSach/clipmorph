@@ -41,6 +41,8 @@ up-sampling).
 ## Weights & Biases
 
 
+
+### References
 [^1]: Gatys, L. A., Ecker, A. S., & Bethge, M. (2016). Image style transfer using convolutional neural networks. In Proceedings of the IEEE conference on computer vision and pattern recognition (pp. 2414-2423).
 [^2]: https://en.wikipedia.org/wiki/Gram_matrix
 [^3]: Johnson, J., Alahi, A., & Fei-Fei, L. (2016). Perceptual losses for 
