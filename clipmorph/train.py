@@ -89,9 +89,9 @@ def train(
         ]
     )
     style_img = load_image(style_img_path)
-    if use_wandb:
-        wandb.log({"style_image": wandb.Image(style_img[0].permute(1, 2, 0).detach().cpu().numpy())})
     style_img = transform(style_img)
+    if use_wandb:
+        wandb.log({"style_image": wandb.Image(style_img.permute(1, 2, 0).detach().cpu().numpy())})
     style_img = style_img.repeat(batch_size, 1, 1, 1).to(device)
     style_img = vgg.normalize_batch(style_img)
 
