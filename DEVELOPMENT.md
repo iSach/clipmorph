@@ -63,9 +63,9 @@ square images of a given size (e.g., 512x512) for performance trade-offs in
 training. They are also rescaled to have floating values between 0 and 1 
 instead of the usual 0-255, in order to be fed to the network.
 
-| ![Image 1](.github/assets/visual_genome/2.png) | ![Image 2](.github/assets/visual_genome/3.png) |
-|-----------------------------------------------|-----------------------------------------------|
-| ![Image 3](.github/assets/visual_genome/4.png) | ![Image 4](.github/assets/visual_genome/5.png) |
+| ![Image 1](.github/assets/visual_genome/2.jpg)   | ![Image 2](.github/assets/visual_genome/3.jpg) |
+|------------------------------------------------|-----------------------------------------------|
+| ![Image 3](.github/assets/visual_genome/4.jpg) | ![Image 4](.github/assets/visual_genome/5.jpg) |
 
 
 
