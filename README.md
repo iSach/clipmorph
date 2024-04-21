@@ -1,11 +1,11 @@
-<p style="text-align: center;">
+<div style="text-align:center">
   <img src=".github/assets/clipmorph_logo.png" alt="ClipMorph Logo" 
 width="200"/>
     <br>
     <em>Make your clips come to life!</em>
-</p>
+</div><br>
 
-<p align="center">
+<div style="text-align:center">
     <a href='https://github.com/iSach/clipmorph/actions/workflows/clipmorph_tests.yml'>
         <img src='https://github.com/iSach/clipmorph/actions/workflows/clipmorph_tests.yml/badge.svg' alt='Test 
 Status' /></a>
@@ -20,7 +20,7 @@ com/iSach/clipmorph/actions/workflows/code_style.yml/badge.svg'
 alt='Code Style Status' /></a>
     <a href="https://github.com/iSach/clipmorph/blob/master/LICENSE">
         <img alt="License" src="https://img.shields.io/badge/License-MIT-blue.svg"></a>
-</p>
+</div>
 
 ### About
 
