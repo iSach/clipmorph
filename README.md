@@ -19,15 +19,29 @@ alt='Code Style Status' /></a>
         <img alt="License" src="https://img.shields.io/badge/License-MIT-blue.svg"></a>
 </div>
 
-### About
+## About
 
-ClipMorph 
+ClipMorph is an AI-powered stylization tool to morph your clips into a 
+different style. It offers a wide range of pre-trained styles to choose from,
+or new styles can be effortlessly added by training a new model in under 
+one hour. Built on state-of-the-art image-to-image AI models, ClipMorph can 
+stylize videos in real-time (~25-30 frames per second).
 
-### Canvas
+> _This project is developed as part of the course "Machine Learning Systems 
+Design" at the University of Liège ([INFO9023](https://github.
+com/ThomasVrancken/info9023-mlops))._
+
+## Model Development
+
+## Model Deployment
+
+## Model Pipeline
+
+## Canvas
 
 The value proposition canvas can be found as `canvas.pdf` in the root folder. 
 
-### Code
+## Code
 
 The code is contained in `climorph.ipynb`. It contains instructions to run each part (training or applying).
 
