@@ -90,6 +90,29 @@ matter the style. We monitor the training process using Weights & Biases
 
 ## Evaluation
 
+The task is itself already quite subjective, and the evaluation is 
+therefore almost entirely qualitative. 
+
+We evaluate the model by tracking the evolution of the output images during 
+training, as it represents the capacity of the model to stylize arbitrary 
+images in the visual genome dataset, and no overfitting can be happen in 
+only one epoch. Here are some examples of style images, arbitrary images and 
+corresponding trained models.
+
+| Style                                            | Image                                                | Stylized image                                        |
+|--------------------------------------------------|------------------------------------------------------|-------------------------------------------------------|
+| ![Image 1](training_data/styles/muse.jpg)        | ![Image 2](.github/assets/eval/img/muse_in.png)      | ![Image 2](.github/assets/eval/img/muse_out.png)      |
+| ![Image 3](training_data/styles/starrynight.jpg) | ![Image 4](.github/assets/eval/img/starry_in.png)    | ![Image 2](.github/assets/eval/img/starry_out.png)    |
+| ![Image 3](training_data/styles/kandinsky.png)   | ![Image 4](.github/assets/eval/img/kandinsky_in.png) | ![Image 2](.github/assets/eval/img/kandinsky_out.png) |
+
+We also qualitatively validate our model on videos from the Kinetics-600 
+dataset [^12]. Below, you can find an example of a stylized video.
+
+| ![Video input](.github/assets/eval/vid/ski.mp4)     | ![Video VanGogh](.github/assets/eval/vid/ski_starrynight.mp4) |
+|-----------------------------------------------------|---------------------------------------------------------------|
+| ![Video Muse](.github/assets/eval/vid/ski_muse.mp4) | ![Video Kandinsky](.github/assets/eval/vid/vid_out3.mp4)      |
+
+
 ## Weights & Biases
 
 We monitor the training of our styles using Weights & Biases [^11]. We log 
@@ -116,3 +139,4 @@ for video](https://medium.com/element-ai-research-lab/stabilizing-neural-style-t
 [^9]: Paszke, A., Gross, S., Massa, F., Lerer, A., Bradbury, J., Chanan, G., ... & Chintala, S. (2019). Pytorch: An imperative style, high-performance deep learning library. Advances in neural information processing systems, 32.
 [^10]: Kingma, D. P., & Ba, J. (2014). Adam: A method for stochastic optimization. arXiv preprint arXiv:1412.6980.
 [^11]: https://wandb.ai
+[^12]: Carreira, J., Noland, E., Banki-Horvath, A., Hillier, C., & Zisserman, A. (2018). A short note about kinetics-600. arXiv preprint arXiv:1808.01340.
