@@ -118,7 +118,7 @@ dataset [^12]. Below, you can find an example of a stylized video.
 
 | ![Video input](.github/assets/eval/vid/ski.mov)     | ![Video VanGogh](.github/assets/eval/vid/ski_starrynight.mov) |
 |-----------------------------------------------------|---------------------------------------------------------------|
-| ![Video Muse](.github/assets/eval/vid/ski_muse.mov) | ![Video Kandinsky](.github/assets/eval/vid/vid_out3.mov)      |
+| ![Video Muse](.github/assets/eval/vid/ski_muse.mov) | ![Video Kandinsky](.github/assets/eval/vid/ski_kandinsky.mov) |
 
 
 ## Weights & Biases
