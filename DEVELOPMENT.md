@@ -108,9 +108,9 @@ corresponding trained models.
 We also qualitatively validate our model on videos from the Kinetics-600 
 dataset [^12]. Below, you can find an example of a stylized video.
 
-| ![Video input](.github/assets/eval/vid/ski.mov)      | ![Video VanGogh](.github/assets/eval/vid/ski_starrynight.mp4) |
+| ![Video input](.github/assets/eval/vid/ski.mov)     | ![Video VanGogh](.github/assets/eval/vid/ski_starrynight.mov) |
 |-----------------------------------------------------|---------------------------------------------------------------|
-| ![Video Muse](.github/assets/eval/vid/ski_muse.mp4) | ![Video Kandinsky](.github/assets/eval/vid/vid_out3.mp4)      |
+| ![Video Muse](.github/assets/eval/vid/ski_muse.mov) | ![Video Kandinsky](.github/assets/eval/vid/vid_out3.mov)      |
 
 
 ## Weights & Biases
