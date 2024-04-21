@@ -1,11 +1,11 @@
-<div style="text-align:center">
+<div align="center">
   <img src=".github/assets/clipmorph_logo.png" alt="ClipMorph Logo" 
 width="200"/>
     <br>
     <em>Make your clips come to life!</em>
 </div><br>
 
-<div style="text-align:center">
+<div align="center">
     <a href='https://github.com/iSach/clipmorph/actions/workflows/clipmorph_tests.yml'>
         <img src='https://github.com/iSach/clipmorph/actions/workflows/clipmorph_tests.yml/badge.svg' alt='Test 
 Status' /></a>
