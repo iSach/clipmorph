@@ -4,7 +4,11 @@ This page describes the development of our model, from choosing and
 collecting data, selecting the architecture, to training and evaluating the
 model.
 
-## Model Description
+## Model Descripti
+
+https://github.com/iSach/clipmorph/assets/13520261/3b830f61-0dee-4c43-a42c-a1815cb1244f
+
+on
 
 Our model is a so-called _"neural style transfer"_ model, i.e., a model 
 based on deep learning that tries to replace the style of a video or an 
