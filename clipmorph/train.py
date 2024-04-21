@@ -63,6 +63,10 @@ def train(
     )
 
     fsn = FastStyleNet().to(device)
+
+    if use_wandb:
+        wandb.watch(fsn, log="all", log_freq=25)
+
     vgg = Vgg19(device=device).to(device)
     print("Models loaded.")
     fsn_params = sum(p.numel() for p in fsn.parameters() if p.requires_grad)
