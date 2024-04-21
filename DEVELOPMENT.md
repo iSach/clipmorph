@@ -120,6 +120,13 @@ dataset [^12]. Below, you can find an example of a stylized video.
 |-----------------------------------------------------|---------------------------------------------------------------|
 | ![Video Muse](.github/assets/eval/vid/ski_muse.mov) | ![Video Kandinsky](.github/assets/eval/vid/ski_kandinsky.mov) |
 
+> [!IMPORTANT]
+> As you can notice, the models are not as consistent as could be desired. 
+> We were not able to get better results and preferred to focus on the 
+> MLOps part of the project rather than further optimizing the model. 
+> Better integration of gradient scaling, tuning the temporal loss weight as 
+> well as related hyper-parameters (noise ratio and level) would be the first 
+> paths to investigate.
 
 ## Weights & Biases
 
