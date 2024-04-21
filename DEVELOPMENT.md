@@ -120,9 +120,9 @@ the different loss components as well as qualitative examples being output
 to track the qualitative evolution of the model. We also log the model's 
 parameters and gradients. You can see example monitoring below.
 
-| ![Image 1](.github/assets/wandb/setup.png)      | ![Image 2](.github/assets/wandb/config.png) |
+| ![Image 1](.github/assets/wnb/setup.png)        | ![Image 2](.github/assets/wnb/config.png) |
 |-------------------------------------------------|---------------------------------------------|
-| ![Image 3](.github/assets/wandb/monitoring.png) | ![Image 4](.github/assets/wandb/watch.png)  |
+| ![Image 3](.github/assets/wnb/monitoring.png) | ![Image 4](.github/assets/wnb/watch.png)  |
 
 
 ### References
