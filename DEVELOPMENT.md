@@ -67,6 +67,7 @@ instead of the usual 0-255, in order to be fed to the network.
 |------------------------------------------------|-----------------------------------------------|
 | ![Image 3](.github/assets/visual_genome/4.jpg) | ![Image 4](.github/assets/visual_genome/5.jpg) |
 
+
 `**Figure:** First four images of the Visual Genome dataset.
 
 ## Training
