@@ -27,6 +27,12 @@ or new styles can be effortlessly added by training a new model in under
 one hour. Built on state-of-the-art image-to-image AI models, ClipMorph can 
 stylize videos in real-time (~25-30 frames per second).
 
+The team behind ClipMorph is composed of:
+- [Sacha Lewin](https://github.com/iSach)
+- [Axelle Schyns](https://github.com/AxelleSchyns)
+- [Laurie Boveroux](https://github.com/LaurieBvrx)
+- [Arthur Louette](https://github.com/LouetteArthur)
+
 Please find a more detailed description of the product itself [here](canvas.pdf).
 
 > _This project is developed as part of the course "Machine Learning Systems 

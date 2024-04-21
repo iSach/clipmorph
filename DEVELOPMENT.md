@@ -23,16 +23,51 @@ procedure through a specific addition of noise in the training process.
 
 The resulting model is a U-Net-style [^5] architecture with 13 
 convolutional layers (3 with down-sampling, 10 for processing, and 3 with
-up-sampling).
+up-sampling). It is trained in a self-supervised manner to minimize 
+_perceptual_ losses on the predicted image. These losses penalize 
+differences in style with the target style and differences in content with
+the input image being stylized. In addition, a _temporal_ loss penalizes 
+unstable predictions of the model (i.e., small noise in input should lead 
+to small differences in output), and a _total variation_ loss is used to
+smooth the output and avoid high-frequency artifacts that are common in 
+that field. 
+
+One trained model encapsulates **_one_** given style and transforms 
+input images so that their content stays intact while the style changes. A 
+model can be trained in under 1 hour and perform inference 
+in real-time (25-30FPS) on a single GPU. 
 
 > [!NOTE]
-> This project is based upon work done in the "Deep Learning" course two 
-> years earlier. More details about the original study of the model can be 
-> found [here](https://github.com/iSach/video-nst). We have in this new 
-> project improved the training loop, improved the architecture 
-> hyperparameters, as well as accelerated the inference process.
+> This project is based upon our previous project done in the "Deep Learning" 
+> course two years earlier. More details about the original study of the 
+> model can be found [here](https://github.com/iSach/video-nst). We have 
+> in this new project improved the training loop and the architecture as well 
+> as accelerated the inference process.
 
-## Data Preparation & EDA
+## Data Preparation
+
+Training requires a large set of arbitrary images and one (or several) 
+style reference images. We choose Visual Genome [^6] as our image bank, in 
+opposition to Microsoft COCO [^7] used in the original paper, as we found 
+it to provide better qualitative results, but any large similar dataset 
+should work. The _perceptual_ losses are computed using feature maps of a deep
+convolutional network. We use, as in [^1] and [^3], the VGG network [^8], 
+although we opt for the VGG-19 variant instead of VGG-16.
+
+Not much data preparation is needed, as only a diverse set of images is 
+required. The code for loading data can be found [here](clipmorph/data/genome_loader.py).
+A script for downloading the Visual Genome dataset can be found [here](clipmorph/training_data/download_genome.sh).
+
+We perform no pre-processing on the images. They are simply resize to 
+square images of a given size (e.g., 512x512) for performance trade-offs in 
+training. They are also rescaled to have floating values between 0 and 1 
+instead of the usual 0-255, in order to be fed to the network.
+
+| ![Image 1](.github/assets/visual_genome/2.png) | ![Image 2](.github/assets/visual_genome/3.png) |
+|-----------------------------------------------|-----------------------------------------------|
+| ![Image 3](.github/assets/visual_genome/4.png) | ![Image 4](.github/assets/visual_genome/5.png) |
+
+
 
 ## Training
 
@@ -50,3 +85,6 @@ real-time style transfer and super-resolution. In Computer Vision–ECCV 2016: 1
 [^4]: de Berker, A. and Rainy, J. (2018). [Stabilizing neural style-transfer 
 for video](https://medium.com/element-ai-research-lab/stabilizing-neural-style-transfer-for-video-62675e203e42) on Medium.
 [^5]: Ronneberger, O., Fischer, P., & Brox, T. (2015). U-net: Convolutional networks for biomedical image segmentation. In Medical image computing and computer-assisted intervention–MICCAI 2015: 18th international conference, Munich, Germany, October 5-9, 2015, proceedings, part III 18 (pp. 234-241). Springer International Publishing.
+[^6]: Krishna, R., Zhu, Y., Groth, O., Johnson, J., Hata, K., Kravitz, J., ... & Fei-Fei, L. (2017). Visual genome: Connecting language and vision using crowdsourced dense image annotations. International journal of computer vision, 123, 32-73.
+[^7]: Lin, T. Y., Maire, M., Belongie, S., Hays, J., Perona, P., Ramanan, D., ... & Zitnick, C. L. (2014). Microsoft coco: Common objects in context. In Computer Vision–ECCV 2014: 13th European Conference, Zurich, Switzerland, September 6-12, 2014, Proceedings, Part V 13 (pp. 740-755). Springer International Publishing.
+[^8]: Simonyan, K., & Zisserman, A. (2014). Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556.
