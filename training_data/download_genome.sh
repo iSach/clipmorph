@@ -6,6 +6,6 @@ unzip images.zip
 rm images.zip
 
 # Move "VG_100K" into "training_data/visual_genome"
-mv VG_100K training_data/visual_genome
+mv VG_100K visual_genome
 
 echo "Done."
