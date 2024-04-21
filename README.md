@@ -10,13 +10,10 @@ width="200"/>
         <img src='https://github.com/iSach/clipmorph/actions/workflows/clipmorph_tests.yml/badge.svg' alt='Test 
 Status' /></a>
     <a href='https://github.com/iSach/clipmorph/actions/workflows/deploy.yml'>
-        <img src='https://github.
-com/iSach/clipmorph/actions/workflows/deploy.yml/badge.svg' 
+        <img src='https://github.com/iSach/clipmorph/actions/workflows/deploy.yml/badge.svg' 
 alt='Deploy Status' /></a>
-    <a href='https://github.com/iSach/clipmorph/actions/workflows/code_style.
-yml'>
-        <img src='https://github.
-com/iSach/clipmorph/actions/workflows/code_style.yml/badge.svg' 
+    <a href='https://github.com/iSach/clipmorph/actions/workflows/code_style.yml'>
+        <img src='https://github.com/iSach/clipmorph/actions/workflows/code_style.yml/badge.svg' 
 alt='Code Style Status' /></a>
     <a href="https://github.com/iSach/clipmorph/blob/master/LICENSE">
         <img alt="License" src="https://img.shields.io/badge/License-MIT-blue.svg"></a>

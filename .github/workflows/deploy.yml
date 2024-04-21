@@ -1,6 +1,7 @@
 # TODO
 
-name: Deploy Flask API to GCR.
+# Deploy Flask Web API to GCR
+name: Deploy
 
 on:
   push: # Branches main & cicd
