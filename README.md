@@ -67,6 +67,21 @@ training status using Weights & Biases.
 
 ## Model Deployment
 
+Please see [DEPLOYMENT.md](DEPLOYMENT.md).
+
+<u>TL;DR</u>: 
+
 ## Model Pipeline
 
-## CI/CD
+Please see [PIPELINE.md](PIPELINE.md).
+
+<u>TL;DR</u>:
+
+## CI / CD
+
+Please see [CICD.md](CICD.md).
+
+<u>TL;DR</u>: We perform continuous integration (CI) through GitHub Actions 
+with unit tests (using PyTest), as well as code style tests (using Ruff). We 
+also perform continuous deployment (CD) of our Flask Web API to Google Cloud 
+Run.

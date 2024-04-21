@@ -68,7 +68,11 @@ instead of the usual 0-255, in order to be fed to the network.
 | ![Image 3](.github/assets/visual_genome/4.jpg) | ![Image 4](.github/assets/visual_genome/5.jpg) |
 
 
-`**Figure:** First four images of the Visual Genome dataset.
+**Figure:** First four images of the Visual Genome dataset.
+
+We select a few well-known artworks as style images, as these images 
+include very distinct and recognizable styles, and they are available in the 
+public domain. Please find some in the `training_data/styles` folder.
 
 ## Training
 
