@@ -47,8 +47,8 @@ in real-time (25-30FPS) on a single GPU.
 ## Data Preparation
 
 Training requires a large set of arbitrary images and one (or several) 
-style reference images. We choose Visual Genome [^6] as our image bank, in 
-opposition to Microsoft COCO [^7] used in the original paper, as we found 
+style reference images. We choose Visual Genome [^6] as our image bank 
+(~65k samples), in opposition to Microsoft COCO [^7] used in the original paper, as we found 
 it to provide better qualitative results, but any large similar dataset 
 should work. The _perceptual_ losses are computed using feature maps of a deep
 convolutional network. We use, as in [^1] and [^3], the VGG network [^8], 
@@ -66,15 +66,40 @@ instead of the usual 0-255, in order to be fed to the network.
 | ![Image 1](.github/assets/visual_genome/2.jpg)   | ![Image 2](.github/assets/visual_genome/3.jpg) |
 |------------------------------------------------|-----------------------------------------------|
 | ![Image 3](.github/assets/visual_genome/4.jpg) | ![Image 4](.github/assets/visual_genome/5.jpg) |
-
-
+**Figure:** First four images of the Visual Genome dataset.
 
 ## Training
+
+Our model is implemented in PyTorch [^9] and trains on a single GPU in 
+about one hour. The 
+training code can be found [here](clipmorph/train.py). 
+
+We use a batch size of 8 images, a learning rate of 1e-3, a style-to-content 
+loss weight ratio of 1e5, a TV weight of 1e-6, and a temporal weight equal to 
+1e3.
+
+We train for 10,000 iterations on the Visual Genome dataset, approximately 
+equal to one epoch. We use the Adam [^10] optimizer with default parameters.
+
+Our hyperparameters were manually tweaked, and should ideally still be 
+tuned for each given style, especially the style-to-content loss weight 
+ratio as it influences the final result. Ultimately, the results are quite 
+subjective and these are only parameters that ensure good model convergence no 
+matter the style. We monitor the training process using Weights & Biases 
+[^11] (see below).
 
 ## Evaluation
 
 ## Weights & Biases
 
+We monitor the training of our styles using Weights & Biases [^11]. We log 
+the different loss components as well as qualitative examples being output 
+to track the qualitative evolution of the model. We also log the model's 
+parameters and gradients. You can see example monitoring below.
+
+| ![Image 1](.github/assets/wandb/setup.png)      | ![Image 2](.github/assets/wandb/config.png) |
+|-------------------------------------------------|---------------------------------------------|
+| ![Image 3](.github/assets/wandb/monitoring.png) | ![Image 4](.github/assets/wandb/watch.png)  |
 
 
 ### References
@@ -88,3 +113,6 @@ for video](https://medium.com/element-ai-research-lab/stabilizing-neural-style-t
 [^6]: Krishna, R., Zhu, Y., Groth, O., Johnson, J., Hata, K., Kravitz, J., ... & Fei-Fei, L. (2017). Visual genome: Connecting language and vision using crowdsourced dense image annotations. International journal of computer vision, 123, 32-73.
 [^7]: Lin, T. Y., Maire, M., Belongie, S., Hays, J., Perona, P., Ramanan, D., ... & Zitnick, C. L. (2014). Microsoft coco: Common objects in context. In Computer Vision–ECCV 2014: 13th European Conference, Zurich, Switzerland, September 6-12, 2014, Proceedings, Part V 13 (pp. 740-755). Springer International Publishing.
 [^8]: Simonyan, K., & Zisserman, A. (2014). Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556.
+[^9]: Paszke, A., Gross, S., Massa, F., Lerer, A., Bradbury, J., Chanan, G., ... & Chintala, S. (2019). Pytorch: An imperative style, high-performance deep learning library. Advances in neural information processing systems, 32.
+[^10]: Kingma, D. P., & Ba, J. (2014). Adam: A method for stochastic optimization. arXiv preprint arXiv:1412.6980.
+[^11]: https://wandb.ai
