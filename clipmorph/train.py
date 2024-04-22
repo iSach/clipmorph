@@ -268,6 +268,7 @@ if __name__ == "__main__":
     if use_wandb:
         run_name = args.run_name + f" ({model_name})"
         wandb.init(
+            entity="clipmorph",
             project="clipmorph",
             name=run_name,
             config={
