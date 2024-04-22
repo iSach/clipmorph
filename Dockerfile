@@ -15,7 +15,7 @@ RUN apt-get install -y libsm6 libxext6 libxrender-dev
 RUN pip install opencv-python-headless
 
 # Download and install depedencies (libraries)
-RUN pip install -r api/requirements.txt
+RUN pip install flask
 RUN pip install -r requirements-cpu.txt
 RUN pip install -e .
 
