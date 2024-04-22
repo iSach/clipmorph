@@ -9,12 +9,10 @@ COPY . .
 # Make port 8080 available to the world outside this container.
 EXPOSE 8080
 
-# Solve cv2 error
 RUN apt-get update
+RUN apt-get install -y ffmpeg
 RUN apt-get install -y libsm6 libxext6 libxrender-dev
 RUN pip install opencv-python-headless
-
-# Download and install depedencies (libraries)
 RUN pip install flask
 RUN pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 RUN pip install -e .
