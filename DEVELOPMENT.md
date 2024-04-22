@@ -112,6 +112,7 @@ corresponding trained models.
 | ![Image 1](training_data/styles/muse.jpg)        | ![Image 2](.github/assets/eval/img/muse_in.png)      | ![Image 2](.github/assets/eval/img/muse_out.png)      |
 | ![Image 3](training_data/styles/starrynight.jpg) | ![Image 4](.github/assets/eval/img/starry_in.png)    | ![Image 2](.github/assets/eval/img/starry_out.png)    |
 | ![Image 3](training_data/styles/kandinsky.png)   | ![Image 4](.github/assets/eval/img/kandinsky_in.png) | ![Image 2](.github/assets/eval/img/kandinsky_out.png) |
+| ![Image 3](training_data/styles/sketch.png)      | ![Image 4](.github/assets/eval/img/sketch_in.png)    | ![Image 2](.github/assets/eval/img/sketch_out.png)    |
 
 We also qualitatively validate our model on videos from the Kinetics-600 
 dataset [^12]. Below, you can find an example of a stylized video, from the 
