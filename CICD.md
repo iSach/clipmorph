@@ -11,7 +11,7 @@ style/language.
 > very regular and clean "GitFlow" workflow. A lot of work was done in the 
 > feature branch (in reality it was called cicd to follow the milestones PR guidelines) and the 
 > tests were therefore also run for every push to this branch. In a more regular and 
-> realistic scenarios, we would not run tests on the very active 
+> realistic scenario, we would not run tests on the very active 
 > development (i.e., feature) branches, but only on the main and development 
 > branches, as feature branches are (possibly) expected to temporarily break 
 > tests.
