@@ -16,7 +16,7 @@ RUN pip install opencv-python-headless
 
 # Download and install depedencies (libraries)
 RUN pip install flask
-RUN pip install -r requirements-cpu.txt
+RUN pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 RUN pip install -e .
 
 WORKDIR /workspace/api
