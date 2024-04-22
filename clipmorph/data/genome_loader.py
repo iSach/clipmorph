@@ -60,7 +60,7 @@ def load_data(root_dir, batch_size, img_size=None):
 
 
 def load_image(filename, size=None):
-    img = Image.open(filename)
+    img = Image.open(filename).convert('RGB')
     if size is not None:
         img = img.resize((size, size))
     return img
