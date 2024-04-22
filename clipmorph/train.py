@@ -165,7 +165,7 @@ def train(
             wandb.log(log_dict)
 
         L_total.backward()
-        torch.nn.utils.clip_grad_norm_(fsn.parameters(), 1.0)
+        torch.nn.utils.clip_grad_norm_(fsn.parameters(), 4.0)
         optimizer.step()
 
         progress_bar.update(1)
