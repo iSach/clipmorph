@@ -10,7 +10,7 @@ from clipmorph.data import load_data
 from clipmorph.nn import FastStyleNet
 
 
-def stylize_video(model, video_path, output_path):
+def stylize_video(model, video_path, output_path, batch_size=16):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     video_name = video_path.split("/")[-1].split(".")[0]
@@ -33,40 +33,35 @@ def stylize_video(model, video_path, output_path):
     style_model.eval()
     style_model.to(device)
 
-    data = load_data(temp_folder_name, 16)
+    data = load_data(temp_folder_name, batch_size)
     num_images = data.dataset.num_images
 
     progress_bar = tqdm(total=num_images, desc="Stylizing images")
 
-    stylized_imgs = []
-    stylized_img_names = []
     for img, names in data:
         img = img.to(device)
 
+        # Stylize
         with torch.no_grad():
             stylized = style_model(img).cpu()
 
-        stylized_imgs.append(stylized)
-        stylized_img_names.extend(names)
+        # Save
+        for i, stylized_img in enumerate(stylized):
+            stylized_img = stylized_img.clone().clamp(0, 255).numpy()
+            stylized_img = stylized_img.transpose(1, 2, 0).astype("uint8")
+            stylized_img = Image.fromarray(stylized_img)
+            stylized_img_path = (
+                temp_folder_name
+                + "/"
+                + names[i].split("/")[-1].split(".")[0]
+                + "_stylized.jpg"
+            )
+            stylized_img.save(stylized_img_path)
+
+        del img
+        del stylized
 
         progress_bar.update(len(names))
-
-    stylized_imgs = torch.cat(stylized_imgs, dim=0)
-
-    save_progress = tqdm(total=num_images, desc="Saving images")
-    for i, stylized in enumerate(stylized_imgs):
-        stylized = stylized.clone().clamp(0, 255).numpy()
-        stylized = stylized.transpose(1, 2, 0).astype("uint8")
-        stylized = Image.fromarray(stylized)
-        stylized_path = (
-            temp_folder_name
-            + "/"
-            + stylized_img_names[i].split("/")[-1].split(".")[0]
-            + "_stylized.jpg"
-        )
-        stylized.save(stylized_path)
-
-        save_progress.update(1)
 
     # Create video from frames
     os.system(
@@ -122,6 +117,12 @@ if __name__ == "__main__":
         default=None,
         help="Path of the output image/video",
     )
+    parser.add_argument(
+        "--batch-size",
+        type=int,
+        default=16,
+        help="Batch size for video stylization",
+    )
 
     args = parser.parse_args()
     model = args.model
@@ -133,7 +134,7 @@ if __name__ == "__main__":
 
     # Video
     if source.split(".")[1] == "mp4":
-        stylize_video(model, source, output)
+        stylize_video(model, source, output, batch_size=args.batch_size)
     # Image
     else:
         stylize_image(model, source, output)

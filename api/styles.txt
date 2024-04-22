@@ -1,4 +1,2 @@
-VanGogh
-Monet
-Picasso
-gericault
+../models/muse.pth
+../models/starrynight.pth

@@ -1,7 +1,7 @@
 from flask import Flask, url_for, redirect, render_template, request, send_file
 import os
 from werkzeug.exceptions import BadRequestKeyError
-from clipmorph import clipmorph
+from clipmorph.run import stylize_video
 import threading 
 
 app = Flask(__name__)
@@ -16,8 +16,9 @@ app.static_folder = 'static'
 def inverse_color_video(input_file, style):
     """Invert the colors of a video."""
     print('Applying the style: ', style)
-    output_file = clipmorph.style(input_file, style)
-    return output_file
+    output_path = input_file.split('.')[0] + '_output.mp4'
+    stylize_video(style, input_file, output_path, batch_size=16)
+    return output_path
 
 def get_style_options():
     with open('styles.txt', 'r') as file:
@@ -41,8 +42,6 @@ def upload_file():
             # Save the uploaded file
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(file_path)
-
-
 
             # Invert colors and save modified video
             modified_file_path = inverse_color_video(file_path, style)

@@ -10,8 +10,9 @@ COPY .. .
 EXPOSE 8080
 
 # Solve cv2 error
-RUN apt-get update
-RUN apt-get install -y libsm6 libxext6 libxrender-dev
+RUN sudo apt clean
+RUN sudo apt-get update
+RUN sudo apt-get install -y libsm6 libxext6 libxrender-dev
 RUN pip install opencv-python-headless
 
 # Download and install depedencies (libraries)
