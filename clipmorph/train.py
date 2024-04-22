@@ -1,4 +1,5 @@
 import argparse
+import os
 
 import numpy as np
 import torch
@@ -173,13 +174,14 @@ def train(
     # Save model
     save_model = model_name + ".pth"
     path_model = "./models/" + save_model
+    os.makedirs("./models", exist_ok=True)
     torch.save(fsn.state_dict(), path_model)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train a fast style network")
     parser.add_argument(
-        "--train-img-dir",
+        "--train-img-dir --style-img-name",
         type=str,
         default="training_data/visual_genome/",
         help="Directory where the training images are stored (e.g., VisGenome)",

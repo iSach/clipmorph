@@ -1,25 +1,24 @@
+# Inspired by https://github.com/nerfstudio-project/nerfstudio/blob/main/Dockerfile
+ARG CUDA_VERSION=11.8.0
+ARG OS_VERSION=22.04
+
+FROM nvidia/cuda:${CUDA_VERSION}-devel-ubuntu${OS_VERSION}
+
 FROM python:3.12
 
 WORKDIR /workspace
 
-COPY . .
-
-# Make port 8080 available to the world outside this container.
-EXPOSE 8080
+COPY clipmorph clipmorph/
+COPY requirements.txt requirements.txt
+COPY pyproject.toml pyproject.toml
 
 RUN apt-get update
-RUN apt-get install -y ffmpeg
-RUN apt-get install -y libsm6 libxext6 libxrender-dev
-RUN apt-get install -y libgomp1
-RUN pip install opencv-python-headless
-RUN pip install flask
-RUN pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+RUN apt-get install -y ffmpeg libsm6 libxext6 libxrender-dev
+RUN pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 RUN pip install -e .
 
-WORKDIR /workspace/api
-
-# Define environment variable
-ENV FLASK_APP=api.py
-
-# Run api.py when the container launches
-CMD ["flask", "run", "--host=0.0.0.0", "--port=8080"]
+# wandb docker run ... -v /path/to/your/data:/workspace/data
+# data should contain
+# - style.png
+# - visual_genome/(images...)
+CMD ["python", "clipmorph/train.py", "--style-img-name", "data/style.png", "--train-img-dir", "data/visual_genome/"]

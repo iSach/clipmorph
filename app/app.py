@@ -14,6 +14,9 @@ app.static_folder = "static"
 
 
 def get_style_options():
+    # TODO: for a more automated approach, we could use buckets in GCS
+    #       and with a nice pipeline have the trained automatically uploaded
+    #       there
     style_dir = "../models/"
     return [
         f.split("/")[-1].split(".")[0]
