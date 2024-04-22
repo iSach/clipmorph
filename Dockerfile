@@ -15,10 +15,12 @@ RUN apt-get install -y libsm6 libxext6 libxrender-dev
 RUN pip install opencv-python-headless
 
 # Download and install depedencies (libraries)
-RUN pip install -r requirements.txt
+RUN pip install -r api/requirements.txt
+RUN pip install -r requirements-cpu.txt
+RUN pip install -e .
 
 # Define environment variable
-ENV FLASK_APP=api.py
+ENV FLASK_APP=api/api.py
 
 # Run api.py when the container launches
 CMD ["flask", "run", "--host=0.0.0.0", "--port=8080"]
