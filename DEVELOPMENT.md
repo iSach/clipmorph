@@ -109,6 +109,7 @@ corresponding trained models.
 
 | Style                                            | Image                                                | Stylized image                                        |
 |--------------------------------------------------|------------------------------------------------------|-------------------------------------------------------|
+| <img width=200/>                                 | <img width=500/>                                     | <img width=500/>                                      |
 | ![Image 1](training_data/styles/muse.jpg)        | ![Image 2](.github/assets/eval/img/muse_in.png)      | ![Image 2](.github/assets/eval/img/muse_out.png)      |
 | ![Image 3](training_data/styles/starrynight.jpg) | ![Image 4](.github/assets/eval/img/starry_in.png)    | ![Image 2](.github/assets/eval/img/starry_out.png)    |
 | ![Image 3](training_data/styles/kandinsky.png)   | ![Image 4](.github/assets/eval/img/kandinsky_in.png) | ![Image 2](.github/assets/eval/img/kandinsky_out.png) |
