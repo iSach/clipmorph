@@ -26,4 +26,3 @@ jobs:
       - name: Format with Ruff
         run: |
           ruff format clipmorph/ tests/ app/ --diff
-          ruff format clipmorph/ tests/ app/ --diff
