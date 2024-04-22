@@ -22,7 +22,8 @@ jobs:
           pip install ruff
       - name: Lint with Ruff
         run: |
-          ruff check clipmorph/ tests/ --output-format=github
+          ruff check clipmorph/ tests/ app/ --output-format=github
       - name: Format with Ruff
         run: |
-          ruff format clipmorph/ tests/ --diff
+          ruff format clipmorph/ tests/ app/ --diff
+          ruff format clipmorph/ tests/ app/ --diff

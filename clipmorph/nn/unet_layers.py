@@ -1,5 +1,6 @@
 from torch import nn
 
+
 class ConvoLayer(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride, padding=1):
         super(ConvoLayer, self).__init__()
