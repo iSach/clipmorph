@@ -114,7 +114,8 @@ corresponding trained models.
 | ![Image 3](training_data/styles/kandinsky.png)   | ![Image 4](.github/assets/eval/img/kandinsky_in.png) | ![Image 2](.github/assets/eval/img/kandinsky_out.png) |
 
 We also qualitatively validate our model on videos from the Kinetics-600 
-dataset [^12]. Below, you can find an example of a stylized video.
+dataset [^12]. Below, you can find an example of a stylized video, from the 
+"Skiing mono" class of Kinetics-600.
 
 | ![Video input](.github/assets/eval/vid/ski.mov)     | ![Video VanGogh](.github/assets/eval/vid/ski_starrynight.mov) |
 |-----------------------------------------------------|---------------------------------------------------------------|

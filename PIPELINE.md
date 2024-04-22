@@ -11,3 +11,8 @@ TODO.
 - Try training at least one model online. Will be hard to train automatically
   - Vertex training or if we're lucky compute instance.
 - Pipeline: probably will be too hard (Vertex Pipeline or Docker compose)
+
+
+
+As we're probably not gonna train on the cloud, we should at least detail 
+our methodology for training the models, i.e., locally :)
