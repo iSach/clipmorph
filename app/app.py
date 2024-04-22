@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, send_file, after_this_request
 import os
 from werkzeug.exceptions import BadRequestKeyError
-from clipmorph.run import stylize_video
+from clipmorph.run import stylize_video, stylize_image
 
 app = Flask(__name__)
 
@@ -46,8 +46,14 @@ def upload_file():
             file_path = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
             file.save(file_path)
 
-            output_path = file_path.split(".")[0] + "_output.mp4"
-            stylize_video(style, file_path, output_path, batch_size=16)
+            extension = file_path.split(".")[-1]
+
+            output_path = file_path.split(".")[0] + "_output." + extension
+
+            if extension == "mp4":
+                stylize_video(style, file_path, output_path, batch_size=16)
+            else:
+                stylize_image(style, file_path, output_path)
 
             @after_this_request
             def remove_file(response):

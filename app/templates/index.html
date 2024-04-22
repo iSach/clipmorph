@@ -79,13 +79,13 @@
     <form action="/upload" method="post" enctype="multipart/form-data">
         <label for="style-select">Choose a style</label>
         <select name="style-select" id="style-select">
-            <option value="">--Please choose an option--</option>
+            <option value="">--Please choose a style--</option>
             {% for style in style_options %}
             <option value="{{ style }}">{{ style }}</option>
             {% endfor %}
         </select>
-        <label for="file">Choose a video .mp4</label>
-        <input type="file" name="file" accept=".mp4">
+        <label for="file">Choose a video .mp4 or image .png</label>
+        <input type="file" name="file" accept=".mp4,.png,.jpg,.jpeg">
         <button type="submit" onClick="this.form.submit(); this.disabled=true; this.value='Saving…';">
             Upload and Stylize
         </button>
