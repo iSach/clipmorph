@@ -21,7 +21,7 @@ complement this work by adding temporal consistency to the model, following
 the work of de Berker and Rainy [^4] that introduce a stabilization 
 procedure through a specific addition of noise in the training process.
 
-The resulting model is a U-Net-style [^5] architecture with 13 
+The resulting model is a U-Net-style [^5] architecture with 16 
 convolutional layers (3 with down-sampling, 10 for processing, and 3 with
 up-sampling). It is trained in a self-supervised manner to minimize 
 _perceptual_ losses on the predicted image. These losses penalize 
