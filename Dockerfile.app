@@ -2,7 +2,7 @@ FROM python:3.12
 
 WORKDIR /workspace
 
-COPY api api/
+COPY app app/
 COPY clipmorph clipmorph/
 COPY models models/
 COPY training_data/styles training_data/styles/
@@ -18,8 +18,8 @@ RUN pip install flask
 RUN pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 RUN pip install -e .
 
-WORKDIR /workspace/api
+WORKDIR /workspace/app
 
-ENV FLASK_APP=api.py
+ENV FLASK_APP=app.py
 
 CMD ["flask", "run", "--host=0.0.0.0", "--port=8080"]

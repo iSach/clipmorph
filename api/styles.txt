@@ -1,2 +1,0 @@
-../models/muse.pth
-../models/starrynight.pth
