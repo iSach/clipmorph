@@ -8,6 +8,8 @@ style/language.
 
 ### Core Tests
 
+> *Workflow file: `.github/workflows/core-tests.yml`*
+
 The core tests are run on every push to the repository and the development 
 branch. We use [PyTest](https://docs.pytest.org/) to easily create unit tests.
 
