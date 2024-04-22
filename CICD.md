@@ -6,7 +6,8 @@ We perform continuous integration (CI) through GitHub Actions. We created
 two separate workflows to check our code both for functionality and for 
 style/language.
 
-> Note: due to lack of time as we're Ph.D. candidates, we could not adapt a 
+> [!NOTE]
+> Due to lack of time as we're Ph.D. candidates, we could not adapt a 
 > very regular and clean "GitFlow" workflow. A lot of work was done in the 
 > feature branch (in reality it was called cicd to follow the milestones PR guidelines) and the 
 > tests were therefore also run for every push to this branch. In a more regular and 
