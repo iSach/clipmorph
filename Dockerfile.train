@@ -1,5 +1,3 @@
-# The following line will download a Docker image that already is set up with python 3.12, so that we can run our
-# simple application. 
 FROM python:3.12
 
 WORKDIR /workspace
@@ -12,6 +10,7 @@ EXPOSE 8080
 RUN apt-get update
 RUN apt-get install -y ffmpeg
 RUN apt-get install -y libsm6 libxext6 libxrender-dev
+RUN apt-get install -y libgomp1
 RUN pip install opencv-python-headless
 RUN pip install flask
 RUN pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu

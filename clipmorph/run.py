@@ -21,7 +21,7 @@ def stylize_video(model, video_path, output_path, batch_size=16):
 
     # Extract frames from video
     os.system(
-        f"ffmpeg -hide_banner -loglevel error -i {video_path} -q:v 2"
+        f"ffmpeg -y -hide_banner -loglevel error -i {video_path} -q:v 2"
         f" {temp_folder_name}/frame_%d.jpg"
     )
 
@@ -31,7 +31,8 @@ def stylize_video(model, video_path, output_path, batch_size=16):
         strict=False,
     )
     style_model.eval()
-    style_model.to(device)
+    if device == torch.device("cuda"):
+        style_model.to(device)
 
     data = load_data(temp_folder_name, batch_size)
     num_images = data.dataset.num_images
@@ -39,7 +40,8 @@ def stylize_video(model, video_path, output_path, batch_size=16):
     progress_bar = tqdm(total=num_images, desc="Stylizing images")
 
     for img, names in data:
-        img = img.to(device)
+        if device == torch.device("cuda"):
+            img = img.to(device)
 
         # Stylize
         with torch.no_grad():
@@ -65,7 +67,7 @@ def stylize_video(model, video_path, output_path, batch_size=16):
 
     # Create video from frames
     os.system(
-        f"ffmpeg -hide_banner -loglevel error -i "
+        f"ffmpeg -y -hide_banner -loglevel error -i "
         f"{temp_folder_name}/frame_%d_stylized.jpg -q:v 2"
         f" {output_path}"
     )
