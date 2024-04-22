@@ -4,7 +4,7 @@ FROM python:3.12
 
 WORKDIR /workspace
 
-COPY .. .
+COPY . .
 
 # Make port 8080 available to the world outside this container.
 EXPOSE 8080
