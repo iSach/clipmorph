@@ -20,8 +20,8 @@ jobs:
 
     - name: Install requirements
       run: |
+        pip install --system --upgrade torch torchvision --index-url https://download.pytorch.org/whl/cpu
         pip install uv
-        uv pip install --system --upgrade torch torchvision==0.17.2 --index-url https://download.pytorch.org/whl/cpu
         uv pip install --system --upgrade -r requirements.txt
         uv pip install --system --upgrade -e .
 
