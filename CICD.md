@@ -44,7 +44,12 @@ does not use deprecated, unrecommended, or dangerous language features.
 ## Continuous Deployment
 
 We perform continuous deployment (CD) through GitHub Actions as well. Our 
-workflow automatically deploys the latest version of our Flask API, if it 
-passes the other styles, to Google Cloud Run.
+workflow automatically deploys the latest version of our Flask API web app. 
+We configured the workflow through the Google Cloud console interface 
+directly to handle authentication more easily. The trigger is enabled for 
+every push on `master` as well as our development branch `cicd`.
 
-TODO
+Thanks to that, the app is always up-to-date at 
+[https://clipmorph.isach.be](https://clipmorph.isach.be).
+
+Please find more information about our deployment choices in [DEPLOYMENT.md](DEPLOYMENT.md).

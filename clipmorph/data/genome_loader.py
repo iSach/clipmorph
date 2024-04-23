@@ -19,7 +19,7 @@ class Data(data.Dataset):
     def __getitem__(self, ind):
         img_name = self.img_names[ind]
         img_path = self.root_dir + "/" + img_name
-        img = Image.open(img_path, mode='r')
+        img = Image.open(img_path, mode='r').convert('RGB')
 
         if self.img_size is None:
             transform = T.Compose([

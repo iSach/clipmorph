@@ -87,7 +87,7 @@ def stylize_image(model, image_path, output_path):
     style_model.eval()
     style_model.to(device)
 
-    img = Image.open(image_path)
+    img = Image.open(image_path).convert("RGB")
     transform = T.Compose([T.ToTensor(), T.Lambda(lambda x: x.mul(255))])
     img = transform(img)
     img = img.unsqueeze(0).to(device)

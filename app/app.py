@@ -13,6 +13,13 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.static_folder = "static"
 
 
+"""
+TODO:
+    - Display the style image when a style is selected.
+
+"""
+
+
 def get_style_options():
     # TODO: for a more automated approach, we could use buckets in GCS
     #       and with a nice pipeline have the trained automatically uploaded

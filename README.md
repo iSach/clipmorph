@@ -6,12 +6,11 @@ width="200"/>
 </div><br>
 
 <div align="center">
+    <a href="https://clipmorph.isach.be">
+        <img alt="License" src="https://img.shields.io/badge/Web App-Online-aqua.svg"></a>
     <a href='https://github.com/iSach/clipmorph/actions/workflows/clipmorph_tests.yml'>
         <img src='https://github.com/iSach/clipmorph/actions/workflows/clipmorph_tests.yml/badge.svg' alt='Test 
 Status' /></a>
-    <a href='https://github.com/iSach/clipmorph/actions/workflows/deploy.yml'>
-        <img src='https://github.com/iSach/clipmorph/actions/workflows/deploy.yml/badge.svg' 
-alt='Deploy Status' /></a>
     <a href='https://github.com/iSach/clipmorph/actions/workflows/code_style.yml'>
         <img src='https://github.com/iSach/clipmorph/actions/workflows/code_style.yml/badge.svg' 
 alt='Code Style Status' /></a>
@@ -69,13 +68,23 @@ training status using Weights & Biases.
 
 Please see [DEPLOYMENT.md](DEPLOYMENT.md).
 
-<u>TL;DR</u>: 
+<u>TL;DR</u>: A Flask web interface was built to serve the model, allowing users to upload files and receive stylized results.
+A Docker container was created to package the code, models, and 
+dependencies. The container is automatically deployed to Google Cloud Run, a 
+serverless platform, for continuous deployment. Users can upload videos or 
+images and receive predictions from pre-trained models through the app at https://clipmorph.isach.be. 
+Due to GPU unavailability on Google Cloud Run, the model was 
+deployed as a CPU-only instance, limiting performance for long videos. 
 
 ## Model Pipeline
 
 Please see [PIPELINE.md](PIPELINE.md).
 
-<u>TL;DR</u>:
+<u>TL;DR</u>: We create a Docker container to package the model training 
+script. To train a model, we provide instructions on how to run the Docker 
+image once it's built. It logs training to Weights&Biases and outputs the 
+pre-trained model. Due to a lack of GPUs and issues with Vertex training, 
+we were unable to deploy training to the cloud or create a cloud-based pipeline.
 
 ## CI / CD
 
@@ -85,3 +94,24 @@ Please see [CICD.md](CICD.md).
 with unit tests (using PyTest), as well as code style tests (using Ruff). We 
 also perform continuous deployment (CD) of our Flask Web API to Google Cloud 
 Run.
+
+## Future Work
+
+This project was a nice way to discover ML systems design. It notably 
+taught us the various challenges of deploying a model to production, and 
+there are many things we were not able to implement, both due to time and 
+resource constraints (GPUs). Here are some ideas for further improving the 
+project:
+- Cache models in memory for faster processing. An example method is to 
+  keep as many models as possible in memory and only unload them when 
+  required. This would significantly reduce the latency of new requests to 
+  the app.
+- Implement a pipeline that allows users to upload their styles that then 
+  start a model training automatically.
+  - Store pre-trained models in a Cloud Storage bucket and load them 
+    dynamically from the app, instead of storing them in the repo/acontainer.
+- Make the app run predictions on GPU for real-time processing.
+- Improve the UI/UX and features of the app: e.g., progress bar, displaying 
+  the video on the website instead of downloading, history of processed 
+  videos, ETA, etc.
+- Monitoring/Dashboarding of our application.

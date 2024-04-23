@@ -1,18 +1,31 @@
 # Pipeline
 
-TODO.
+## Training Docker Container
 
-- Package training script in Docker to run locally (extremely easy)
-  - We just need to make the Dockerfile with cuda image
-  - install dependencies etc
-  - and find how it should be started (like do we have to enter the 
-    container and run the python script or should it run automatically idk)
-  - -> Check Nerfstudio docker image
-- Try training at least one model online. Will be hard to train automatically
-  - Vertex training or if we're lucky compute instance.
-- Pipeline: probably will be too hard (Vertex Pipeline or Docker compose)
+> *Docker file:* `Dockerfile.train`
 
+We package our model training script into a Docker container. Similar to 
+deployment and serving, we copy necessary files and install dependencies.
 
+To build the Docker image, run:
+`docker build -t clipmorph_train -f Dockerfile.train .`
 
-As we're probably not gonna train on the cloud, we should at least detail 
-our methodology for training the models, i.e., locally :)
+To train a model, it is required to:
+1. Prepare a data folder that contains the reference image named `style.
+   png` and a `visual_genome` folder that contains the Visual Genome 
+   dataset. One can download this data using `training_data/download_genome.
+   sh`.
+2. Set up Weights & Biases for tracking.
+3. Run:
+
+`wandb docker run -v /path/data:/workspace/data -v 
+/path/output_models:/workspace/models clipmorph_train`
+
+This will start the training job that will get logged on W&B, and the model 
+will be saved in the mounted `output_models` folder.
+
+## Cloud Training & Pipeline
+
+We were **not** able to deploy training to the cloud due to a lack of GPUs 
+and issues with Vertex training. Consequently, we were not able to create a 
+pipeline on the cloud either.
