@@ -11,8 +11,7 @@ To build the Docker image, run:
 `docker build -t clipmorph_train -f Dockerfile.train .`
 
 To train a model, it is required to:
-1. Prepare a data folder that contains the reference image named `style.
-   png` and a `visual_genome` folder that contains the Visual Genome 
+1. Prepare a data folder that contains the reference image named `style.png` and a `visual_genome` folder that contains the Visual Genome 
    dataset. One can download this data using `training_data/download_genome.
    sh`.
 2. Set up Weights & Biases for tracking.
