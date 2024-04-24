@@ -3,6 +3,7 @@
 venv/*
 
 training_data/images/
+training_data/visual_genome/
 data/
 output/
 
