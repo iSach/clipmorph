@@ -10,7 +10,7 @@ from clipmorph.data import load_data
 from clipmorph.nn import FastStyleNet
 
 
-def stylize_video(model, video_path, output_path, batch_size=16):
+def stylize_video(model, video_path, output_path, batch_size=16, socketio=None):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     video_name = video_path.split("/")[-1].split(".")[0]
@@ -64,6 +64,8 @@ def stylize_video(model, video_path, output_path, batch_size=16):
         del stylized
 
         progress_bar.update(len(names))
+        if socketio:
+            socketio.emit('progress', {'current': progress_bar.n, 'total': num_images})
 
     # Create video from frames
     os.system(
