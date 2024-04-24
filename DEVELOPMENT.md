@@ -135,7 +135,11 @@ dataset [^12]. Below, you can find an example of a stylized video, from the
 We monitor the training of our styles using Weights & Biases [^11]. We log 
 the different loss components as well as qualitative examples being output 
 to track the qualitative evolution of the model. We also log the model's 
-parameters and gradients. You can see example monitoring below.
+parameters and gradients, to monitor a possible explosion of the gradients. 
+
+Everything is automatically defined, including the model configuration, which allows us to compare what hyperparameters each run uses, by our code. For more information, feel free to check `clipmorph/train.py`.
+
+You can see example monitoring below.
 
 | ![Image 1](.github/assets/wnb/setup.png)        | ![Image 2](.github/assets/wnb/config.png) |
 |-------------------------------------------------|---------------------------------------------|

@@ -23,6 +23,9 @@ To train a model, it is required to:
 This will start the training job that will get logged on W&B, and the model 
 will be saved in the mounted `output_models` folder.
 
+> [!TIP]
+> Find more details and screenshots about our use of Weights & Biases in [DEVELOPMENT.md](DEVELOPMENT.md).
+
 ## Cloud Training & Pipeline
 
 We were **not** able to deploy training to the cloud due to a lack of GPUs 
