@@ -100,5 +100,17 @@
             Upload and Stylize
         </button>
     </form>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.on('progress', function(data) {
+        var progress = (data.current / data.total) * 100;
+        document.getElementById('progress-bar').style.width = progress + '%';
+    });
+    </script>
+
+    <div id="progress-container" style="width: 100%; background-color: #ddd;">
+        <div id="progress-bar" style="width: 0%; height: 20px; background-color: #4CAF50;"></div>
+    </div>
 </body>
 </html>

@@ -2,8 +2,10 @@ from flask import Flask, render_template, request, send_file, after_this_request
 import os
 from werkzeug.exceptions import BadRequestKeyError
 from clipmorph.run import stylize_video, stylize_image
+from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
+socketio = SocketIO(app)
 
 UPLOAD_FOLDER = "uploads"
 if not os.path.exists(UPLOAD_FOLDER):
@@ -60,9 +62,9 @@ def upload_file():
             output_path = file_path.split(".")[0] + "_output." + extension
 
             if extension == "mp4":
-                stylize_video(style, file_path, output_path, batch_size=16)
+                stylize_video(style, file_path, output_path, batch_size=16, socketio=socketio)
             else:
-                stylize_image(style, file_path, output_path)
+                stylize_image(style, file_path, output_path, socketio=socketio)
 
             @after_this_request
             def remove_file(response):
@@ -79,4 +81,4 @@ def upload_file():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    socketio.run(app, debug=True)
