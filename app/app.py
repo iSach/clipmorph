@@ -25,11 +25,13 @@ def get_style_options():
     #       and with a nice pipeline have the trained automatically uploaded
     #       there
     style_dir = "../models/"
-    return [
-        f.split("/")[-1].split(".")[0]
-        for f in os.listdir(style_dir)
-        if f.endswith(".pth")
-    ]
+    styles = []
+    for f in os.listdir(style_dir):
+        if f.endswith(".pth"):
+            style_name = f.split(".")[0]
+            image_path = f"../training_data/styles/{style_name}.jpg"
+            styles.append((style_name, image_path))
+    return styles
 
 
 @app.route("/")

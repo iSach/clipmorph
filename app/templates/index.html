@@ -78,12 +78,22 @@
 
     <form action="/upload" method="post" enctype="multipart/form-data">
         <label for="style-select">Choose a style</label>
-        <select name="style-select" id="style-select">
+        <script>
+            function updateStyleImage() {
+                var select = document.getElementById('style-select');
+                var imagePath = select.options[select.selectedIndex].getAttribute('data-img');
+                var img = document.getElementById('style-image');
+                img.src = imagePath;
+                img.style.display = 'block';
+            }
+        </script>
+        <select name="style-select" id="style-select" onchange="updateStyleImage()">
             <option value="">--Please choose a style--</option>
-            {% for style in style_options %}
-            <option value="{{ style }}">{{ style }}</option>
+            {% for style, img_path in style_options %}
+            <option value="{{ style }}" data-img="{{ img_path }}">{{ style }}</option>
             {% endfor %}
         </select>
+        <img id="style-image" style="display:none; max-width: 200px;" />
         <label for="file">Choose a video .mp4 or image .png</label>
         <input type="file" name="file" accept=".mp4,.png,.jpg,.jpeg">
         <button type="submit" onClick="this.form.submit(); this.disabled=true; this.value='Saving…';">
