@@ -66,6 +66,15 @@
         #logo img {
             max-width: 200px;
         }
+        #progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            line-height: 20px;
+            background-color: #ddd;
+        }
     </style>
 </head>
 <body>
@@ -93,7 +102,9 @@
             <option value="{{ style }}" data-img="{{ img_path }}">{{ style }}</option>
             {% endfor %}
         </select>
-        <img id="style-image" style="display:none; max-width: 200px;" />
+        <div class="style-image-container" style="display: flex; justify-content: center; align-items: center; height: 100px; margin-top: 20px;margin-bottom: 40px;">
+            <img id="style-image" style="display:none; max-width: 200px;" />
+        </div>
         <label for="file">Choose a video .mp4 or image .png</label>
         <input type="file" name="file" accept=".mp4,.png,.jpg,.jpeg">
         <button type="submit" onClick="this.form.submit(); this.disabled=true; this.value='Saving…';">
@@ -102,13 +113,17 @@
     </form>
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
     <script>
-    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    // var socket = io.connect();
+    var socket = io('http://' + document.domain + ':' + location.port, {
+       transports: ['websocket']
+   });
     socket.on('progress', function(data) {
         var progress = (data.current / data.total) * 100;
-        document.getElementById('progress-bar').style.width = progress + '%';
+        var elem = document.getElementById('progress-bar')
+        elem.style.width = progress + '%';
+        elem.innerHTML = Math.round(progress) + '%';
     });
     </script>
-
     <div id="progress-container" style="width: 100%; background-color: #ddd;">
         <div id="progress-bar" style="width: 0%; height: 20px; background-color: #4CAF50;"></div>
     </div>

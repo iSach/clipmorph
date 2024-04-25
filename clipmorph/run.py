@@ -78,7 +78,7 @@ def stylize_video(model, video_path, output_path, batch_size=16, socketio=None):
     os.system(f"rm -rf {temp_folder_name}")
 
 
-def stylize_image(model, image_path, output_path):
+def stylize_image(model, image_path, output_path, socketio=None):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     style_model = FastStyleNet()
@@ -98,6 +98,8 @@ def stylize_image(model, image_path, output_path):
     stylized = stylized.clone().clamp(0, 255).numpy()
     stylized = stylized.transpose(1, 2, 0).astype("uint8")
     stylized = Image.fromarray(stylized)
+    if socketio:
+            socketio.emit('progress', {'current': 1, 'total': 1})
     stylized.save(output_path)
 
 

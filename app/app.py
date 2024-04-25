@@ -15,13 +15,6 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.static_folder = "static"
 
 
-"""
-TODO:
-    - Display the style image when a style is selected.
-
-"""
-
-
 def get_style_options():
     # TODO: for a more automated approach, we could use buckets in GCS
     #       and with a nice pipeline have the trained automatically uploaded
@@ -31,7 +24,7 @@ def get_style_options():
     for f in os.listdir(style_dir):
         if f.endswith(".pth"):
             style_name = f.split(".")[0]
-            image_path = f"../training_data/styles/{style_name}.jpg"
+            image_path = f"static/styles/{style_name}.jpg"
             styles.append((style_name, image_path))
     return styles
 
@@ -81,4 +74,4 @@ def upload_file():
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True)
+    socketio.run(app, debug=False)
