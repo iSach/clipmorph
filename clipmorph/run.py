@@ -9,6 +9,7 @@ from tqdm import tqdm
 from clipmorph.data import load_data
 from clipmorph.nn import FastStyleNet
 
+import ffmpeg
 
 def stylize_video(model, video_path, output_path, batch_size=16, socketio=None):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -21,7 +22,7 @@ def stylize_video(model, video_path, output_path, batch_size=16, socketio=None):
 
     # Extract frames from video
     os.system(
-        f"ffmpeg -y -hide_banner -loglevel error -i {video_path} -q:v 2"
+        f"ffmpeg -y -hide_banner -loglevel error -i \"{video_path}\" -q:v 2"
         f" {temp_folder_name}/frame_%d.jpg"
     )
 
@@ -65,13 +66,17 @@ def stylize_video(model, video_path, output_path, batch_size=16, socketio=None):
 
         progress_bar.update(len(names))
         if socketio:
+            socketio.sleep(0)
             socketio.emit('progress', {'current': progress_bar.n, 'total': num_images})
 
     # Create video from frames
+    probe = ffmpeg.probe(video_path)
+    video_info = next(s for s in probe['streams'] if s['codec_type'] == 'video')
+    fps = int(video_info['r_frame_rate'].split('/')[0])
     os.system(
-        f"ffmpeg -y -hide_banner -loglevel error -i "
-        f"{temp_folder_name}/frame_%d_stylized.jpg -q:v 2"
-        f" {output_path}"
+        f'ffmpeg -y -hide_banner -loglevel error -i "{video_path}" -i '
+        f'{temp_folder_name}/frame_%d_stylized.jpg -framerate {fps} -map "0:a?" -map 1:v -c:v libx264 -c:a copy -q:v 2'
+        f' "{output_path}"'
     )
 
     # Remove temporary folder
