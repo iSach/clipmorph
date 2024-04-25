@@ -14,12 +14,10 @@ EXPOSE 8080
 RUN apt-get update
 RUN apt-get install -y ffmpeg libsm6 libxext6 libxrender-dev
 RUN pip install opencv-python-headless
-RUN pip install flask
+RUN pip install -r app/requirements.txt
 RUN pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 RUN pip install -e .
 
 WORKDIR /workspace/app
 
-ENV FLASK_APP=app.py
-
-CMD ["flask", "run", "--host=0.0.0.0", "--port=8080"]
+CMD ["python", "app.py"]
