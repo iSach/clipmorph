@@ -17,3 +17,4 @@ def test_gram_matrix():
 
     assert gram.size() == gram_test.size()
     assert torch.allclose(gram, gram_test)
+    
