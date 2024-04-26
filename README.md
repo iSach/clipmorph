@@ -111,7 +111,7 @@ project:
   - Store pre-trained models in a Cloud Storage bucket and load them 
     dynamically from the app, instead of storing them in the repo/acontainer.
 - Make the app run predictions on GPU for real-time processing.
-- Improve the UI/UX and features of the app: e.g., progress bar, displaying 
+- Improve the UI/UX and features of the app: e.g., fully working progress bar with another worker for the running task, displaying 
   the video on the website instead of downloading, history of processed 
   videos, ETA, etc.
 - Monitoring/Dashboarding of our application.
