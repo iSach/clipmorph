@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, send_file, after_this_request
 import os
 from werkzeug.exceptions import BadRequestKeyError
 from clipmorph.run import stylize_video, stylize_image
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO
 
 app = Flask(__name__)
 socketio = SocketIO(app)
