@@ -1,3 +1,5 @@
+import os
+
 import torch 
 
 from clipmorph.data.__init__ import load_data, Data    
@@ -8,9 +10,9 @@ from torchvision import transforms as T
 def test_data():
     """Test the data loading."""
 
-    data_list = ['klee.jpg', 'starrynight.jpg', 'lines.jpg', 'scream.jpg', 'basquiat.jpg', 'simpsons.jpg', 'dali.jpg', 'monet.jpg', 'ermine.jpg', 'chagall.jpg', 'kandinsky.jpg', 'okeeffe.jpg', 'watercolor.jpg', 'femme.jpg', 'hopper.jpg', 'klimt.jpg', 'kanagawa.jpg', 'muse.jpg', 'picasso.jpg', 'sketch.jpg', 'turner.jpg']
-
     data_path = './training_data/styles'
+    data_list = os.listdir(data_path)
+    data_list.sort()
     data = Data(data_path)
     assert data.__len__() == 21
     assert data.num_images == 21
@@ -18,7 +20,7 @@ def test_data():
     assert data.img_size ==  None
     prov = data.img_names
     prov.sort()
-    assert prov == data_list.sort()
+    assert prov == data_list
 
     for i in range(data.__len__()):
         img, img_name = data.__getitem__(i)
@@ -30,6 +32,7 @@ def test_data():
     assert data.num_images == 21
     assert data.root_dir  == data_path
     assert data.img_size ==  224
+    data.img_names.sort()
     assert data.img_names == data_list
 
     data_loader = load_data(data_path, 7, 224)
