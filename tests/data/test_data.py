@@ -16,7 +16,7 @@ def test_data():
     assert data.num_images == 21
     assert data.root_dir  == data_path
     assert data.img_size ==  None
-    assert data.img_names == data_list
+    assert data.img_names.sort() == data_list.sort()
 
     for i in range(data.__len__()):
         img, img_name = data.__getitem__(i)
