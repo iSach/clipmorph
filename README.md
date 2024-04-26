@@ -91,9 +91,10 @@ we were unable to deploy training to the cloud or create a cloud-based pipeline.
 Please see [CICD.md](CICD.md).
 
 <u>TL;DR</u>: We perform continuous integration (CI) through GitHub Actions 
-with unit tests (using PyTest), as well as code style tests (using Ruff). We 
-also perform continuous deployment (CD) of our Flask Web API to Google Cloud 
-Run.
+with unit tests (using PyTest), as well as code style tests (using Ruff). These tests
+are run when pushing to the dev or the main branch, as well as when submitting a PR into these
+branches to avoid merging commits that do not respect the guidelines or break the codebase. We 
+also perform continuous deployment (CD) of our Flask Web API to Google Cloud Run.
 
 ## Future Work
 
