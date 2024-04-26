@@ -11,6 +11,7 @@ from clipmorph.nn import FastStyleNet
 
 import ffmpeg
 
+
 def stylize_video(model, video_path, output_path, batch_size=16, socketio=None):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -22,7 +23,7 @@ def stylize_video(model, video_path, output_path, batch_size=16, socketio=None):
 
     # Extract frames from video
     os.system(
-        f"ffmpeg -y -hide_banner -loglevel error -i \"{video_path}\" -q:v 2"
+        f'ffmpeg -y -hide_banner -loglevel error -i "{video_path}" -q:v 2'
         f" {temp_folder_name}/frame_%d.jpg"
     )
 
@@ -67,12 +68,12 @@ def stylize_video(model, video_path, output_path, batch_size=16, socketio=None):
         progress_bar.update(len(names))
         if socketio:
             socketio.sleep(0)
-            socketio.emit('progress', {'current': progress_bar.n, 'total': num_images})
+            socketio.emit("progress", {"current": progress_bar.n, "total": num_images})
 
     # Create video from frames
     probe = ffmpeg.probe(video_path)
-    video_info = next(s for s in probe['streams'] if s['codec_type'] == 'video')
-    fps = int(video_info['r_frame_rate'].split('/')[0])
+    video_info = next(s for s in probe["streams"] if s["codec_type"] == "video")
+    fps = int(video_info["r_frame_rate"].split("/")[0])
     os.system(
         f'ffmpeg -y -hide_banner -loglevel error -i "{video_path}" -i '
         f'{temp_folder_name}/frame_%d_stylized.jpg -framerate {fps} -map "0:a?" -map 1:v -c:v libx264 -c:a copy -q:v 2'
@@ -104,7 +105,7 @@ def stylize_image(model, image_path, output_path, socketio=None):
     stylized = stylized.transpose(1, 2, 0).astype("uint8")
     stylized = Image.fromarray(stylized)
     if socketio:
-            socketio.emit('progress', {'current': 1, 'total': 1})
+        socketio.emit("progress", {"current": 1, "total": 1})
     stylized.save(output_path)
 
 

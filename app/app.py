@@ -55,7 +55,9 @@ def upload_file():
             output_path = file_path.split(".")[0] + "_output." + extension
 
             if extension == "mp4":
-                stylize_video(style, file_path, output_path, batch_size=16, socketio=socketio)
+                stylize_video(
+                    style, file_path, output_path, batch_size=16, socketio=socketio
+                )
             else:
                 stylize_image(style, file_path, output_path, socketio=socketio)
 
@@ -74,4 +76,4 @@ def upload_file():
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True, host='0.0.0.0', port=8080, allow_unsafe_werkzeug=True)
+    socketio.run(app, debug=True, host="0.0.0.0", port=8080, allow_unsafe_werkzeug=True)
