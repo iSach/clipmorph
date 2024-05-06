@@ -1,5 +1,3 @@
-# Test training on dummy dataset of 60 images.
-import numpy as np
 import torch
 
 from torch import nn
@@ -12,14 +10,12 @@ from torchvision import transforms as T
 from clipmorph.util.losses import style_loss, tot_variation_loss
 from clipmorph.util.math import gram_matrix
 
-def train_test():
+def test_train():
     """ Test training on dummy dataset of 5 images."""
-    
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = "cpu"
     data_loader = load_data('./training_data/styles', 7, img_size=224)
     fsn = FastStyleNet().to(device)
     vgg = Vgg19(device=device).to(device)
-    fsn_params = sum(p.numel() for p in fsn.parameters() if p.requires_grad)
 
     if torch.cuda.is_available():
         fsn.compile()
