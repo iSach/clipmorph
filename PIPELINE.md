@@ -11,17 +11,19 @@ To build the Docker image, run:
 `docker build -t clipmorph_train -f Dockerfile.train .`
 
 To train a model, it is required to:
-1. Prepare a data folder that contains the reference image named `style.png` and a `visual_genome` folder that contains the Visual Genome 
+1. Prepare a data folder that contains the reference image named `style.jpg` and a `visual_genome` folder that contains the Visual Genome 
    dataset. One can download this data using `training_data/download_genome.
    sh`.
-2. Set up Weights & Biases for tracking.
 3. Run:
 
-`wandb docker run -v /path/data:/workspace/data -v 
-/path/output_models:/workspace/models clipmorph_train`
+`sudo docker run --gpus all -v ./models:/workspace/models -v ./data:/workspace/data --rm -it clipmorph_train`
 
 This will start the training job that will get logged on W&B, and the model 
-will be saved in the mounted `output_models` folder.
+will be saved in the mounted `models` folder.
+
+If you do not wish to use the interactive mode, Weights and Biases will not work as such. You need to give your API key when running Docker:
+
+`sudo docker run -e WANDB_API_KEY=<your-key> --gpus all -v ./models:/workspace/models -v ./data:/workspace/data --rm -it clipmorph_train`
 
 > [!TIP]
 > Find more details and screenshots about our use of Weights & Biases in [DEVELOPMENT.md](DEVELOPMENT.md).

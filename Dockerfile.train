@@ -1,10 +1,5 @@
-# Inspired by https://github.com/nerfstudio-project/nerfstudio/blob/main/Dockerfile
-ARG CUDA_VERSION=11.8.0
-ARG OS_VERSION=22.04
-
-FROM nvidia/cuda:${CUDA_VERSION}-devel-ubuntu${OS_VERSION}
-
-FROM python:3.12
+FROM nvidia/cuda:11.8.0-devel-ubuntu22.04
+FROM python:3.9
 
 WORKDIR /workspace
 
@@ -17,8 +12,10 @@ RUN apt-get install -y ffmpeg libsm6 libxext6 libxrender-dev
 RUN pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 RUN pip install -e .
 
-# wandb docker run ... -v /path/to/your/data:/workspace/data
+# To run:
+# sudo docker run --gpus all -v ./models:/workspace/models -v ./data:/workspace/data --rm -it clipmorph_train
+#
 # data should contain
 # - style.png
 # - visual_genome/(images...)
-CMD ["python", "clipmorph/train.py", "--style-img-name", "data/style.png", "--train-img-dir", "data/visual_genome/"]
+CMD ["python", "clipmorph/train.py", "--style-img-name", "data/style.jpg", "--train-img-dir", "data/visual_genome/"]
