@@ -181,7 +181,7 @@ def train(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train a fast style network")
     parser.add_argument(
-        "--train-img-dir --style-img-name",
+        "--train-img-dir",
         type=str,
         default="training_data/visual_genome/",
         help="Directory where the training images are stored (e.g., VisGenome)",
