@@ -84,7 +84,8 @@ Please see [PIPELINE.md](PIPELINE.md).
 script. To train a model, we provide instructions on how to run the Docker 
 image once it's built. It logs training to Weights&Biases and outputs the 
 pre-trained model. Due to a lack of GPUs and issues with Vertex training, 
-we were unable to deploy training to the cloud or create a cloud-based pipeline.
+we were unable to deploy training to the cloud or create a cloud-based pipeline, 
+but this Docker image was tested locally and could theoretically be used with any cloud provider.
 
 ## CI / CD
 
