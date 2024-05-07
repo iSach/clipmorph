@@ -22,7 +22,7 @@ package's API (see [clipmorph/run.py](`clipmorph/run.py`)) to stylize the
 image or video.
 
 <div align="center">
-  <img src="../.github/assets/website_snapshot.png" alt="ClipMorph Web App" 
+  <img src=".github/assets/website_snapshot.png" alt="ClipMorph Web App" 
 width="750"/>
     <br>
     <p>Example screenshot of the web application.</p>
