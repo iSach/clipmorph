@@ -32,4 +32,4 @@ If you do not wish to use the interactive mode, Weights and Biases will not work
 
 We were **not** able to deploy training to the cloud due to a lack of GPUs 
 and issues with Vertex training. Consequently, we were not able to create a 
-pipeline on the cloud either.
+pipeline on the cloud either. However, we tested the Docker image locally, the container runs without issues. It could thus theoretically be used with any cloud provider.
