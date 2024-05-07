@@ -5,7 +5,7 @@ This folder contains the code for the Web application for ClipMorph, which allow
 Our app was written with Flask in Python, and consists of a simple web page that allows to select the style and upload media to stylize.
 
 <div align="center">
-  <img src=".github/assets/website_snapshot.png" alt="ClipMorph Web App" 
+  <img src="../.github/assets/website_snapshot.png" alt="ClipMorph Web App" 
 width="200"/>
     <br>
     <p>Example screenshot of the web application.</p>
