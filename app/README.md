@@ -6,7 +6,7 @@ Our app was written with Flask in Python, and consists of a simple web page that
 
 <div align="center">
   <img src="../.github/assets/website_snapshot.png" alt="ClipMorph Web App" 
-width="200"/>
+width="900"/>
     <br>
     <p>Example screenshot of the web application.</p>
 </div><br>
