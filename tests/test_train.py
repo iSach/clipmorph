@@ -11,9 +11,9 @@ from clipmorph.util.losses import style_loss, tot_variation_loss
 from clipmorph.util.math import gram_matrix
 
 def test_train():
-    """ Test training on dummy dataset of 5 images."""
+    """Test training on dummy dataset of 5 images."""
     device = "cpu"
-    data_loader = load_data('./training_data/styles', 7, img_size=224)
+    data_loader = load_data("./training_data/styles", 7, img_size=224)
     fsn = FastStyleNet().to(device)
     vgg = Vgg19(device=device).to(device)
 
@@ -32,7 +32,7 @@ def test_train():
             T.Lambda(lambda x: x.mul(255)),
         ]
     )
-    style_img = load_image('./training_data/styles/turner.jpg')
+    style_img = load_image("./training_data/styles/turner.jpg")
     style_img = transform(style_img)
 
     style_img = style_img.repeat(7, 1, 1, 1).to(device)
