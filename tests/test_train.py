@@ -10,6 +10,7 @@ from torchvision import transforms as T
 from clipmorph.util.losses import style_loss, tot_variation_loss
 from clipmorph.util.math import gram_matrix
 
+
 def test_train():
     """Test training on dummy dataset of 5 images."""
     device = "cpu"
