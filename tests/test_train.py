@@ -32,7 +32,7 @@ def test_train():
             T.Lambda(lambda x: x.mul(255)),
         ]
     )
-    style_img = load_image('./training_Data/styles/turner.jpg')
+    style_img = load_image('./training_data/styles/turner.jpg')
     style_img = transform(style_img)
 
     style_img = style_img.repeat(7, 1, 1, 1).to(device)
