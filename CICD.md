@@ -11,8 +11,7 @@ are also run for every submitted pull request, to avoid breaking the codebase wh
 merging.
 
 > [!NOTE]
-> We tried to adopt a "GitFlow" workflow, but as we are Ph.D. candidates, this
-> was not very easy to do, and we started to use this late. Therefore, many
+> We tried to adopt a "GitFlow" workflow, but as we are Ph.D. candidates, it was hard for us to follow a regular schedule, and we started to use this late. Therefore, many
 > commits were done directly in the `dev` branch. However, we've used some
 > feature branches, such as for deploying to GCR and including UX changes.
 
