@@ -58,8 +58,8 @@ Please see [DEVELOPMENT.md](DEVELOPMENT.md).
 <u>TL;DR</u>: Our model performs neural style transfer. It is a deep 
 U-Net-style 
 network (image-to-image with downsampling and upsampling). It learns to 
-apply a style by minimizing special losses that force the content to stay 
-the same but the style to match another image. We collect a dataset of diverse 
+apply a style by minimizing specific loss functions that force the content to remain 
+the same while the style has to match the one of another reference image. We collect a dataset of diverse 
 images (VisualGenome) and several well-known artworks for training. One 
 model is trained per style. We qualitatively validated our model and tracked 
 training status using Weights & Biases.
@@ -71,10 +71,10 @@ Please see [DEPLOYMENT.md](DEPLOYMENT.md).
 <u>TL;DR</u>: A Flask web interface was built to serve the model, allowing users to upload files and receive stylized results.
 A Docker container was created to package the code, models, and 
 dependencies. The container is automatically deployed to Google Cloud Run, a 
-serverless platform, for continuous deployment. Users can upload videos or 
+serverless platform, for continuous deployment (CD). Users can upload videos or 
 images and receive predictions from pre-trained models through the app at https://clipmorph.isach.be. 
 Due to GPU unavailability on Google Cloud Run, the model was 
-deployed as a CPU-only instance, limiting performance for long videos. 
+deployed as a CPU-only instance, strongly limiting performance for long videos. 
 
 ## Model Pipeline
 
@@ -101,18 +101,19 @@ also perform continuous deployment (CD) of our Flask Web API to Google Cloud Run
 
 This project was a nice way to discover ML systems design. It notably 
 taught us the various challenges of deploying a model to production, and 
-there are many things we were not able to implement, both due to time and 
+there are several things we were not unfortunately able to implement, due to time and 
 resource constraints (GPUs). Here are some ideas for further improving the 
 project:
-- Cache models in memory for faster processing. An example method is to 
-  keep as many models as possible in memory and only unload them when 
-  required. This would significantly reduce the latency of new requests to 
-  the app.
-- Implement a pipeline that allows users to upload their styles that then 
-  start a model training automatically.
+- Implement a pipeline that allows users to upload their styles so that then, 
+  a model is trained automatically.
   - Store pre-trained models in a Cloud Storage bucket and load them 
     dynamically from the app, instead of storing them in the repo/acontainer.
+  - Make the pipeline use GPU for training.
 - Make the app run predictions on GPU for real-time processing.
+- Cache models in memory for faster processing. An example method is to 
+  keep as many models as possible in memory and only unload them when 
+  it is required to load new ones and memory is full. This would significantly reduce the latency of new requests to 
+  the app.
 - Improve the UI/UX and features of the app: e.g., fully working progress bar with another worker for the running task, displaying 
   the video on the website instead of downloading, history of processed 
   videos, ETA, etc.
