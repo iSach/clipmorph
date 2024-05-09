@@ -39,7 +39,7 @@ in real-time (25-30FPS) on a single GPU.
 
 > [!NOTE]
 > This project is based upon our previous project done in the "Deep Learning" 
-> course two years earlier. More details about the original study of the 
+> course two years ago. More details about the original study of the 
 > model can be found [here](https://github.com/iSach/video-nst). We have 
 > in this new project improved the training loop and the architecture as well 
 > as accelerated the inference process.
