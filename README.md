@@ -48,7 +48,7 @@ as well as pre-trained styles, training data scripts, and more.
 - `app`: contains the Flask Web API for remotely calling the model.
 - `models/`: contains pre-trained models (weights), can be loaded with `run.py`.
 - `tests/`: contains unit tests for the project.
-- `training_data/`: contains style images and a script to download Visal 
+- `training_data/`: contains style images and a script to download Visual 
   Genome.
 
 ## Model Development
