@@ -3,8 +3,8 @@
 > [!WARNING]
 > Due to the severe lack of GPU availability on Google Cloud Run, we could 
 > sadly not deploy our model to GPU compute instances. We experimented with Vertex AI, but were 
-> unable to make it work with model, experiencing many issues with their 
-> Predict API. Our model was tested locally on a GPU and works, but we were 
+> unable to make it work with our models, experiencing many issues with their 
+> Predict API. Our model was tested locally on a GPU (both for training and inference) and works flawlessly, but we were 
 > sadly limited to CPU-only deployment for the final project submission.
 
 ## Serving API
