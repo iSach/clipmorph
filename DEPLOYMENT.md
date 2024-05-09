@@ -65,4 +65,4 @@ video please, e.g., 2 or 3 seconds max.
 > [!NOTE]
 > We were not able to implement the pipeline that allows users to upload 
 > their styles that then start a model training automatically, mainly because we were 
-> unable to obtain a GPU online for training, so we dropped this idea.
+> unable to obtain a GPU online for training, so we dropped this idea which is unfeasible from the start without proper compute.
