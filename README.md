@@ -45,7 +45,7 @@ as well as pre-trained styles, training data scripts, and more.
 - `clipmorph/`: contains the main codebase for the project.
   - `run.py`: script for running the application on an image/video.
   - `train.py`: script to train a new model.
-- `api`: contains the Flask Web API for remotely calling the model.
+- `app`: contains the Flask Web API for remotely calling the model.
 - `models/`: contains pre-trained models (weights), can be loaded with `run.py`.
 - `tests/`: contains unit tests for the project.
 - `training_data/`: contains style images and a script to download Visal 
