@@ -46,7 +46,7 @@ does not use deprecated, unrecommended, or dangerous language features.
 We perform continuous deployment (CD) through GitHub Actions as well. Our 
 workflow automatically deploys the latest version of our Flask API web app. 
 We configured the workflow through the Google Cloud console interface 
-directly to handle authentication more easily. The trigger is enabled for 
+directly to handle authentication more easily. The trigger is enabled for
 every push on `master`, as well as our development branch `dev` for the purpose of the project.
 
 Thanks to that, the app is always up-to-date at 

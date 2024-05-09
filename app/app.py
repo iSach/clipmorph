@@ -2,8 +2,10 @@ from flask import Flask, render_template, request, send_file, after_this_request
 import os
 from werkzeug.exceptions import BadRequestKeyError
 from clipmorph.run import stylize_video, stylize_image
+from flask_socketio import SocketIO
 
 app = Flask(__name__)
+socketio = SocketIO(app)
 
 UPLOAD_FOLDER = "uploads"
 if not os.path.exists(UPLOAD_FOLDER):
@@ -13,23 +15,18 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.static_folder = "static"
 
 
-"""
-TODO:
-    - Display the style image when a style is selected.
-
-"""
-
-
 def get_style_options():
     # TODO: for a more automated approach, we could use buckets in GCS
     #       and with a nice pipeline have the trained automatically uploaded
     #       there
     style_dir = "../models/"
-    return [
-        f.split("/")[-1].split(".")[0]
-        for f in os.listdir(style_dir)
-        if f.endswith(".pth")
-    ]
+    styles = []
+    for f in os.listdir(style_dir):
+        if f.endswith(".pth"):
+            style_name = f.split(".")[0]
+            image_path = f"static/styles/{style_name}.jpg"
+            styles.append((style_name, image_path))
+    return styles
 
 
 @app.route("/")
@@ -58,9 +55,11 @@ def upload_file():
             output_path = file_path.split(".")[0] + "_output." + extension
 
             if extension == "mp4":
-                stylize_video(style, file_path, output_path, batch_size=16)
+                stylize_video(
+                    style, file_path, output_path, batch_size=16, socketio=socketio
+                )
             else:
-                stylize_image(style, file_path, output_path)
+                stylize_image(style, file_path, output_path, socketio=socketio)
 
             @after_this_request
             def remove_file(response):
@@ -77,4 +76,4 @@ def upload_file():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    socketio.run(app, debug=True, host="0.0.0.0", port=8080, allow_unsafe_werkzeug=True)

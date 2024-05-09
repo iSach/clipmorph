@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.5">
     <title>ClipMorph</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <style>
         body {
             font-family: 'Quicksand', sans-serif;
@@ -66,6 +67,15 @@
         #logo img {
             max-width: 200px;
         }
+        #progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            line-height: 20px;
+            background-color: #ddd;
+        }
     </style>
 </head>
 <body>
@@ -78,17 +88,45 @@
 
     <form action="/upload" method="post" enctype="multipart/form-data">
         <label for="style-select">Choose a style</label>
-        <select name="style-select" id="style-select">
+        <script>
+            function updateStyleImage() {
+                var select = document.getElementById('style-select');
+                var imagePath = select.options[select.selectedIndex].getAttribute('data-img');
+                var img = document.getElementById('style-image');
+                img.src = imagePath;
+                img.style.display = 'block';
+            }
+        </script>
+        <select name="style-select" id="style-select" onchange="updateStyleImage()">
             <option value="">--Please choose a style--</option>
-            {% for style in style_options %}
-            <option value="{{ style }}">{{ style }}</option>
+            {% for style, img_path in style_options %}
+            <option value="{{ style }}" data-img="{{ img_path }}">{{ style }}</option>
             {% endfor %}
         </select>
+        <div class="style-image-container" style="display: flex; justify-content: center; align-items: center; height: 100px; margin-top: 20px;margin-bottom: 40px;">
+            <img id="style-image" style="display:none; max-width: 200px;" />
+        </div>
         <label for="file">Choose a video .mp4 or image .png</label>
         <input type="file" name="file" accept=".mp4,.png,.jpg,.jpeg">
         <button type="submit" onClick="this.form.submit(); this.disabled=true; this.value='Saving…';">
             Upload and Stylize
         </button>
     </form>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+    // var socket = io.connect();
+    var socket = io('http://' + document.domain + ':' + location.port, {
+       transports: ['websocket']
+   });
+    socket.on('progress', function(data) {
+        var progress = (data.current / data.total) * 100;
+        var elem = document.getElementById('progress-bar')
+        elem.style.width = progress + '%';
+        elem.innerHTML = Math.round(progress) + '%';
+    });
+    </script>
+    <div id="progress-container" style="width: 100%; background-color: #ddd;">
+        <div id="progress-bar" style="width: 0%; height: 20px; background-color: #4CAF50;"></div>
+    </div>
 </body>
 </html>

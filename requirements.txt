@@ -5,3 +5,4 @@ matplotlib
 wandb
 pytest
 ruff
+ffmpeg-python
