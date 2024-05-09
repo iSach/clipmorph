@@ -137,7 +137,7 @@ the different loss components as well as qualitative examples being output
 to track the qualitative evolution of the model. We also log the model's 
 parameters and gradients, to monitor a possible explosion of the gradients. 
 
-Everything is automatically defined, including the model configuration, which allows us to compare what hyperparameters each run uses, by our code. For more information, feel free to check `clipmorph/train.py`.
+Everything is automatically defined by our code, including the model configuration, which allows us to compare what hyperparameters each run uses. For more information, feel free to check `clipmorph/train.py`.
 
 You can see example monitoring below.
 
