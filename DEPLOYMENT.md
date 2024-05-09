@@ -18,7 +18,7 @@ our web framework. All the code for the Flask app can be found in the
 `app/` folder.
 
 The app is a simple web interface with a small Python script that calls our 
-package's API (see [clipmorph/run.py](`clipmorph/run.py`)) to stylize the 
+package's API (see `clipmorph/run.py`](clipmorph/run.py)) to stylize the 
 image or video.
 
 <div align="center">
