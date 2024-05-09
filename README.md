@@ -84,16 +84,18 @@ Please see [PIPELINE.md](PIPELINE.md).
 script. To train a model, we provide instructions on how to run the Docker 
 image once it's built. It logs training to Weights&Biases and outputs the 
 pre-trained model. Due to a lack of GPUs and issues with Vertex training, 
-we were unable to deploy training to the cloud or create a cloud-based pipeline.
+we were unable to deploy training to the cloud or create a cloud-based pipeline, 
+but this Docker image was tested locally and could theoretically be used with any cloud provider.
 
 ## CI / CD
 
 Please see [CICD.md](CICD.md).
 
 <u>TL;DR</u>: We perform continuous integration (CI) through GitHub Actions 
-with unit tests (using PyTest), as well as code style tests (using Ruff). We 
-also perform continuous deployment (CD) of our Flask Web API to Google Cloud 
-Run.
+with unit tests (using PyTest), as well as code style tests (using Ruff). These tests
+are run when pushing to the dev or the main branch, as well as when submitting a PR into these
+branches to avoid merging commits that do not respect the guidelines or break the codebase. We 
+also perform continuous deployment (CD) of our Flask Web API to Google Cloud Run.
 
 ## Future Work
 

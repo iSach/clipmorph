@@ -1,10 +1,10 @@
 name: Code Style
 
 on:
-  push: # Branches main & cicd
-    branches: [main, cicd]
+  push:
+    branches: [main, dev]
   pull_request:
-    branches: [main]
+    branches: [main, dev]
 
 jobs:
   build:

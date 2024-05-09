@@ -21,6 +21,12 @@ The app is a simple web interface with a small Python script that calls our
 package's API (see [clipmorph/run.py](`clipmorph/run.py`)) to stylize the 
 image or video.
 
+<div align="center">
+  <img src=".github/assets/website_snapshot.png" alt="ClipMorph Web App" 
+width="750"/>
+    <br>
+    <p>Example screenshot of the web application.</p>
+</div><br>
 
 ## Docker Container
 
