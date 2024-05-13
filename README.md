@@ -32,7 +32,7 @@ The team behind ClipMorph is composed of:
 - [Laurie Boveroux](https://github.com/LaurieBvrx)
 - [Arthur Louette](https://github.com/LouetteArthur)
 
-Please find a more detailed description of the product itself [here](canvas.pdf).
+Please find a more detailed description of the product itself [here](canvas.pdf). The slides for the final presentation are available [here](slides.pdf).
 
 > _This project is developed as part of the course "Machine Learning Systems 
 Design" @ ULiège ([INFO9023](https://github.com/ThomasVrancken/info9023-mlops))._
