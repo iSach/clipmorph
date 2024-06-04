@@ -1,0 +1,21 @@
+FROM nvidia/cuda:11.8.0-devel-ubuntu22.04
+FROM python:3.9
+
+WORKDIR /workspace
+
+COPY clipmorph clipmorph/
+COPY requirements.txt requirements.txt
+COPY pyproject.toml pyproject.toml
+
+RUN apt-get update
+RUN apt-get install -y ffmpeg libsm6 libxext6 libxrender-dev
+RUN pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+RUN pip install -e .
+
+# To run:
+# sudo docker run --gpus all -v ./models:/workspace/models -v ./data:/workspace/data --rm -it clipmorph_train
+#
+# data should contain
+# - style.png
+# - visual_genome/(images...)
+CMD ["python", "clipmorph/train.py", "--style-img-name", "data/style.jpg", "--train-img-dir", "data/visual_genome/"]

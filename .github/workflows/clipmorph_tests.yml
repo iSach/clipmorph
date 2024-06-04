@@ -1,0 +1,30 @@
+name: Core Tests
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.9
+
+    - name: Install requirements
+      run: |
+        pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+        pip install uv
+        uv pip install --system --upgrade -r requirements.txt
+        uv pip install --system --upgrade -e .
+
+    - name: Run tests
+      run: |
+        pytest tests/

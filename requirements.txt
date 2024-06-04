@@ -1,4 +1,8 @@
-Flask==3.0.2
-torch==2.2.1
-torchvision==0.11.1
-tqdm==4.62.3
+tqdm
+pillow
+numpy
+matplotlib
+wandb
+pytest
+ruff
+ffmpeg-python
